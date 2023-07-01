@@ -1,24 +1,47 @@
-﻿namespace LidarObjectDetection;
+﻿using System.Collections.ObjectModel;
+using System.Diagnostics;
 
-public partial class MainPage : ContentPage
-{
-	int count = 0;
+namespace LidarObjectDetection;
 
-	public MainPage()
-	{
+
+
+public partial class MainPage : ContentPage {
+
+	public TestDrawable Drawable { get; set; } = new();
+
+	public MainPage() {
+
+		BindingContext = this;
 		InitializeComponent();
 	}
 
-	private void OnCounterClicked(object sender, EventArgs e)
-	{
-		count++;
-
-		if (count == 1)
-			CounterBtn.Text = $"Clicked {count} time";
-		else
-			CounterBtn.Text = $"Clicked {count} times";
-
-		SemanticScreenReader.Announce(CounterBtn.Text);
-	}
 }
 
+
+public class TestDrawable : IDrawable {
+
+	public void Draw(ICanvas canvas, RectF dirtyRect) {
+
+		Debug.WriteLine(canvas);
+		Debug.WriteLine(dirtyRect);
+
+		canvas.StrokeColor = Colors.Red;
+		canvas.StrokeSize = 6;
+
+		canvas.DrawLine(10, 10, 90, 100);
+		canvas.DrawRectangle(0, 0, 400, 400);
+	}
+
+	public void DrawShape(ICanvas canvas, RectF dirtyRect) {
+
+	}
+
+}
+
+
+
+public class CrossSection {
+
+	public ReadOnlyCollection<Point> Vertices { get; init; } = new List<Point>().AsReadOnly();
+
+}
