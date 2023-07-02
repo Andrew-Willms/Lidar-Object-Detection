@@ -3,6 +3,7 @@
 	xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
 	xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
 	xmlns:lidarObjectDetection="clr-namespace:LidarObjectDetection"
+	xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
 	x:Class="LidarObjectDetection.MainPage"
 	x:DataType="lidarObjectDetection:MainPage">
 
@@ -10,10 +11,52 @@
 
 		<Grid>
 
+			<Grid.RowDefinitions>
+				<RowDefinition Height="*"/>
+				<RowDefinition Height="auto"/>
+			</Grid.RowDefinitions>
+			
 			<GraphicsView
-				Drawable="{Binding Drawable}"
-				HeightRequest="400"
-				WidthRequest="400" />
+				x:Name="TestGraphicsView"
+				Drawable="{Binding Drawable, Mode=OneWay}"
+				Grid.Row="0"/>
+
+			<toolkit:Expander Grid.Row="1">
+				<toolkit:Expander.Header>
+					<Label Text="Baboon"
+					       FontAttributes="Bold"
+					       FontSize="Medium" />
+				</toolkit:Expander.Header>
+				<HorizontalStackLayout Padding="10">
+					<Image Source="http://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Papio_anubis_%28Serengeti%2C_2009%29.jpg/200px-Papio_anubis_%28Serengeti%2C_2009%29.jpg"
+					       Aspect="AspectFill"
+					       HeightRequest="120"
+					       WidthRequest="120" />
+					<Label Text="Baboons are African and Arabian Old World monkeys belonging to the genus Papio, part of the subfamily Cercopithecinae."
+					       FontAttributes="Italic" />
+				</HorizontalStackLayout>
+			</toolkit:Expander>
+
+			<!--<TabBar
+				Grid.Row="1">
+
+				<Tab>
+					<ShellContent>
+						<Button 
+							Text="Change Drawing"
+							Clicked="Button_OnClicked"/>
+					</ShellContent>
+				</Tab>
+
+				<Tab>
+					<ShellContent>
+						<Button 
+							Text="Change Drawing"
+							Clicked="Button_OnClicked"/>
+					</ShellContent>
+				</Tab>
+
+			</TabBar>-->
 
 		</Grid>
 
