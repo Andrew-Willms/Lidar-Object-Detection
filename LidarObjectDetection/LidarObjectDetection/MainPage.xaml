@@ -21,38 +21,121 @@
 				Drawable="{Binding Drawable, Mode=OneWay}"
 				Grid.Row="0"/>
 
-			<toolkit:Expander Grid.Row="1">
-				<toolkit:Expander.Header>
-					<Label Text="Baboon"
-					       FontAttributes="Bold"
-					       FontSize="Medium" />
-				</toolkit:Expander.Header>
-				<HorizontalStackLayout Padding="10">
-					<Label Text="Baboons are African and Arabian Old World monkeys belonging to the genus Papio, part of the subfamily Cercopithecinae."
-					       FontAttributes="Italic" />
-				</HorizontalStackLayout>
-			</toolkit:Expander>
-
-			<!--<TabBar
+			<VerticalStackLayout
+				Spacing="10"
+				Padding="10"
 				Grid.Row="1">
 
-				<Tab>
-					<ShellContent>
-						<Button 
-							Text="Change Drawing"
-							Clicked="Button_OnClicked"/>
-					</ShellContent>
-				</Tab>
+				<toolkit:Expander>
 
-				<Tab>
-					<ShellContent>
-						<Button 
-							Text="Change Drawing"
-							Clicked="Button_OnClicked"/>
-					</ShellContent>
-				</Tab>
+					<toolkit:Expander.Header>
+						<Label Text="Field" FontAttributes="Bold" FontSize="Medium"/>
+					</toolkit:Expander.Header>
 
-			</TabBar>-->
+					<Border Padding="10">
+						<Grid ColumnSpacing="10" RowSpacing="10">
+
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="auto"/>
+								<ColumnDefinition Width="*"/>
+							</Grid.ColumnDefinitions>
+
+							<Grid.RowDefinitions>
+								<RowDefinition/>
+								<RowDefinition/>
+							</Grid.RowDefinitions>
+
+							<Label
+								Text="Field Width"
+								Grid.Column="0"
+								Grid.Row="0"/>
+
+							<Label
+								Text="Field Height"
+								Grid.Column="0"
+								Grid.Row="1"/>
+
+							<Entry
+								Text="{}"
+								MinimumWidthRequest="100"
+								HorizontalOptions="Start"
+								Grid.Column="1"
+								Grid.Row="0"/>
+
+							<Entry
+								Text="{}"
+								MinimumWidthRequest="100"
+								HorizontalOptions="Start"
+								Grid.Column="1"
+								Grid.Row="1"/>
+
+						</Grid>
+					</Border>
+
+				</toolkit:Expander>
+
+				<toolkit:Expander>
+
+					<toolkit:Expander.Header>
+						<Label Text="Sensors" FontAttributes="Bold" FontSize="Medium"/>
+					</toolkit:Expander.Header>
+
+					<Border Padding="10">
+						<Grid ColumnSpacing="10" RowSpacing="10">
+
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="auto"/>
+								<ColumnDefinition Width="*"/>
+							</Grid.ColumnDefinitions>
+
+							<Grid.RowDefinitions>
+								<RowDefinition/>
+								<RowDefinition/>
+								<RowDefinition/>
+							</Grid.RowDefinitions>
+
+							<Label
+								Text="Lidar Sensors"
+								Grid.Column="0"
+								Grid.Row="0"/>
+
+							<Label
+								Text="Lidar Array Width"
+								Grid.Column="0"
+								Grid.Row="1"/>
+
+							<Label
+								Text="Standard Deviation"
+								Grid.Column="0"
+								Grid.Row="2"/>
+
+							<Entry
+								Text="{}"
+								MinimumWidthRequest="100"
+								HorizontalOptions="Start"
+								Grid.Column="1"
+								Grid.Row="0"/>
+
+							<Entry
+								Text="{}"
+								MinimumWidthRequest="100"
+								HorizontalOptions="Start"
+								Grid.Column="1"
+								Grid.Row="1"/>
+
+							<Entry
+								Text="{}"
+								MinimumWidthRequest="100"
+								HorizontalOptions="Start"
+								Grid.Column="1"
+								Grid.Row="2"/>
+
+						</Grid>
+					</Border>
+
+				</toolkit:Expander>
+
+			</VerticalStackLayout>
 
 		</Grid>
 

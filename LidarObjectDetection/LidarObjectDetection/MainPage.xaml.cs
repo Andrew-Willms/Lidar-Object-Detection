@@ -6,7 +6,7 @@ namespace LidarObjectDetection;
 
 public partial class MainPage : ContentPage {
 
-	public FieldDrawingManager Drawable { get; } = new(1, 2);
+	public FieldDrawingManager Drawable { get; } = new(3, 2);
 
 	public MainPage() {
 
