@@ -17,7 +17,7 @@
 			</Grid.RowDefinitions>
 			
 			<GraphicsView
-				x:Name="TestGraphicsView"
+				x:Name="GraphicsView"
 				Drawable="{Binding Drawable, Mode=OneWay}"
 				Grid.Row="0"/>
 
@@ -56,14 +56,14 @@
 								Grid.Row="1"/>
 
 							<Entry
-								Text="{}"
+								Text="{Binding FieldWidth}"
 								MinimumWidthRequest="100"
 								HorizontalOptions="Start"
 								Grid.Column="1"
 								Grid.Row="0"/>
 
 							<Entry
-								Text="{}"
+								Text="{Binding FieldHeight}"
 								MinimumWidthRequest="100"
 								HorizontalOptions="Start"
 								Grid.Column="1"
@@ -105,26 +105,26 @@
 								Grid.Row="1"/>
 
 							<Label
-								Text="Standard Deviation"
+								Text="Lidar % Error σ"
 								Grid.Column="0"
 								Grid.Row="2"/>
 
 							<Entry
-								Text="{}"
+								Text="{Binding LidarSensorCount}"
 								MinimumWidthRequest="100"
 								HorizontalOptions="Start"
 								Grid.Column="1"
 								Grid.Row="0"/>
 
 							<Entry
-								Text="{}"
+								Text="{Binding LidarArrayWidth}"
 								MinimumWidthRequest="100"
 								HorizontalOptions="Start"
 								Grid.Column="1"
 								Grid.Row="1"/>
 
 							<Entry
-								Text="{}"
+								Text="{Binding LidarPercentErrorStandardDeviation}"
 								MinimumWidthRequest="100"
 								HorizontalOptions="Start"
 								Grid.Column="1"

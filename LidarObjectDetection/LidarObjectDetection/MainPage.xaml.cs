@@ -6,7 +6,53 @@ namespace LidarObjectDetection;
 
 public partial class MainPage : ContentPage {
 
-	public FieldDrawingManager Drawable { get; } = new(3, 2);
+	public double FieldWidth {
+		get => Drawable.FieldWidth;
+		set {
+			Drawable.FieldWidth = value;
+			SettingChanged();
+		}
+	}
+
+	public double FieldHeight {
+		get => Drawable.FieldHeight;
+		set {
+			Drawable.FieldHeight = value;
+			SettingChanged();
+		}
+	}
+
+	public int LidarSensorCount {
+		get => Drawable.LidarSensorCount;
+		set {
+			Drawable.LidarSensorCount = value;
+			SettingChanged();
+		}
+	}
+
+	public double LidarArrayWidth {
+		get => Drawable.LidarArrayWidth;
+		set {
+			Drawable.LidarArrayWidth = value;
+			SettingChanged();
+		}
+	}
+
+	public double LidarPercentErrorStandardDeviation {
+		get => Drawable.LidarPercentErrorStandardDeviation;
+		set {
+			Drawable.LidarPercentErrorStandardDeviation = value;
+			SettingChanged();
+		}
+	}
+
+	public FieldDrawingManager Drawable { get; } = new() {
+		FieldWidth = 3,
+		FieldHeight = 2,
+		LidarArrayWidth = 1,
+		LidarSensorCount = 15,
+		LidarPercentErrorStandardDeviation = 1
+	};
 
 	public MainPage() {
 
@@ -14,9 +60,8 @@ public partial class MainPage : ContentPage {
 		InitializeComponent();
 	}
 
-	private void Button_OnClicked(object sender, EventArgs e) {
-
-		TestGraphicsView.Invalidate();
+	private void SettingChanged() {
+		GraphicsView?.Invalidate();
 	}
 
 }
@@ -129,14 +174,11 @@ public class FieldUnitsCanvas {
 
 public class FieldDrawingManager : IDrawable {
 
-	private readonly double FieldWidth;
-	private readonly double FieldHeight;
-
-	public FieldDrawingManager(double fieldWidth, double fieldHeight) {
-
-		FieldWidth = fieldWidth;
-		FieldHeight = fieldHeight;
-	}
+	public required double FieldWidth { get; set; }
+	public required double FieldHeight { get; set; }
+	public required int LidarSensorCount { get; set; }
+	public required double LidarArrayWidth { get; set; }
+	public required double LidarPercentErrorStandardDeviation { get; set; }
 
 	public void Draw(ICanvas canvas, RectF dirtyRect) {
 
@@ -157,6 +199,8 @@ public class Setup {
 	public int LidarSensorCount { get; init; } = 15;
 
 	public double LidarArrayWidth { get; init; } = 1.0;
+
+	public double LidarPercentErrorStandardDeviation { get; init; } = 1.0;
 
 	public double FieldWidth { get; init; } = 3.0;
 
