@@ -28,10 +28,6 @@
 					       FontSize="Medium" />
 				</toolkit:Expander.Header>
 				<HorizontalStackLayout Padding="10">
-					<Image Source="http://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Papio_anubis_%28Serengeti%2C_2009%29.jpg/200px-Papio_anubis_%28Serengeti%2C_2009%29.jpg"
-					       Aspect="AspectFill"
-					       HeightRequest="120"
-					       WidthRequest="120" />
 					<Label Text="Baboons are African and Arabian Old World monkeys belonging to the genus Papio, part of the subfamily Cercopithecinae."
 					       FontAttributes="Italic" />
 				</HorizontalStackLayout>
