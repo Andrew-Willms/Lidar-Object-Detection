@@ -33,11 +33,6 @@ public class LineSegment {
 
 		}
 
-		// if the lines are parallel, short circuiting here avoids a division by zero later
-		if (distanceFromStart == distanceFromEnd) {
-			return NoIntersection.Instance;
-		}
-
 		// If both the the start and end points of other are on the positive side of the current line.
 		if (distanceFromStart > 0 || distanceFromEnd > 0) {
 			return NoIntersection.Instance;
