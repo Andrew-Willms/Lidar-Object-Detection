@@ -1,4 +1,6 @@
 ﻿using System.Collections.ObjectModel;
+using LidarObjectDetection.LinearAlgebra;
+using OneOf;
 
 namespace LidarObjectDetection;
 
@@ -6,7 +8,7 @@ namespace LidarObjectDetection;
 
 public partial class MainPage : ContentPage {
 
-	public double FieldWidth {
+	public float FieldWidth {
 		get => Drawable.FieldWidth;
 		set {
 			Drawable.FieldWidth = value;
@@ -14,7 +16,7 @@ public partial class MainPage : ContentPage {
 		}
 	}
 
-	public double FieldHeight {
+	public float FieldHeight {
 		get => Drawable.FieldHeight;
 		set {
 			Drawable.FieldHeight = value;
@@ -30,7 +32,7 @@ public partial class MainPage : ContentPage {
 		}
 	}
 
-	public double LidarArrayWidth {
+	public float LidarArrayWidth {
 		get => Drawable.LidarArrayWidth;
 		set {
 			Drawable.LidarArrayWidth = value;
@@ -69,58 +71,69 @@ public partial class MainPage : ContentPage {
 
 
 
-public class FieldUnitsCanvas {
+public class FieldCanvas {
 
-	private Color BackgroundColor { get; }
-	private Color BorderColor { get; }
-	private float BorderThickness { get; }
+	private readonly float FieldWidth;
+	private readonly float FieldHeight;
 
-	private double FieldWidth { get; }
-	private double FieldHeight { get; }
 	private ICanvas BackingCanvas { get; }
-	private RectF CanvasDimensionsMinusBorder { get; }
+	private (double Width, double Height) FreeCanvasDimensions { get; }
+
+	private readonly int LidarSensorCount;
+	private readonly float LidarArrayWidth;
 
 	private readonly double XOffset;
 	private readonly double YOffset;
 	private readonly double DrawScalingFactor;
 
-	public FieldUnitsCanvas(
-		double fieldWidth,
-		double fieldHeight,
+	private static readonly Color BackgroundColor = Colors.Black;
+	private static readonly Color BorderColor = Colors.White;
+	private const float BorderThickness = 5;
+	private static readonly Color LidarArrayColor = Colors.Lime;
+	private const float LidarArrayLineThickness = 2;
+	private const float LidarArrayHeight = 5;
+	 
+	public FieldCanvas(
+		float fieldWidth,
+		float fieldHeight,
 		ICanvas backingCanvas,
 		RectF canvasDimensions,
-		Color backgroundColor,
-		Color borderColor,
-		float borderThickness = 1) {
+		int lidarSensorCount,
+		float lidarArrayWidth) {
 
 		FieldWidth = fieldWidth;
 		FieldHeight = fieldHeight;
-		BackgroundColor = backgroundColor;
-		BorderColor = borderColor;
-		BorderThickness = borderThickness;
-		BackingCanvas = backingCanvas;
-		CanvasDimensionsMinusBorder = new(0, 0, canvasDimensions.Width - 2 * BorderThickness, canvasDimensions.Height - 2 * BorderThickness);
 
-		double canvasRatio = CanvasDimensionsMinusBorder.Width / CanvasDimensionsMinusBorder.Height;
+		BackingCanvas = backingCanvas;
+		FreeCanvasDimensions = (canvasDimensions.Width - 2 * BorderThickness, canvasDimensions.Height - 2 * BorderThickness - LidarArrayHeight);
+
+		LidarSensorCount = lidarSensorCount;
+		LidarArrayWidth = lidarArrayWidth;
+
+		double canvasRatio = FreeCanvasDimensions.Width / FreeCanvasDimensions.Height;
 		double fieldRatio = fieldWidth / fieldHeight;
 
 		bool canvasHasExtraWidth = canvasRatio > fieldRatio;
 
 		if (canvasHasExtraWidth) {
-			DrawScalingFactor = CanvasDimensionsMinusBorder.Height / fieldHeight;
-			XOffset = (CanvasDimensionsMinusBorder.Width - fieldWidth * DrawScalingFactor) / 2 + BorderThickness;
+			DrawScalingFactor = FreeCanvasDimensions.Height / fieldHeight;
+			XOffset = (FreeCanvasDimensions.Width - fieldWidth * DrawScalingFactor) / 2 + BorderThickness;
 			YOffset = BorderThickness;
 
 		} else {
-			DrawScalingFactor = CanvasDimensionsMinusBorder.Width / fieldWidth;
+			DrawScalingFactor = FreeCanvasDimensions.Width / fieldWidth;
 			XOffset = BorderThickness;
-			YOffset = (CanvasDimensionsMinusBorder.Height - fieldHeight * DrawScalingFactor) / 2 + BorderThickness;
+			YOffset = (FreeCanvasDimensions.Height - fieldHeight * DrawScalingFactor) / 2 + BorderThickness;
 		}
 
 		DrawBorderAndBackground();
+
+		DrawLidarArray();
 	}
 
-	public void DrawLine(double xStart, double yStart, double xEnd, double yEnd) {
+	public void DrawLine(double xStart, double yStart, double xEnd, double yEnd, Color lineColor, float lineThickness) {
+
+		//TODO make it cut off the lines when they extend beyond the edge of the field.
 
 		if (xStart < 0 || xStart > FieldWidth) {
 			throw new ArgumentException($"{nameof(xStart)} must be between {0} and {FieldWidth}, was {xStart}.");
@@ -138,6 +151,8 @@ public class FieldUnitsCanvas {
 			throw new ArgumentException($"{nameof(yEnd)} must be between {0} and {FieldHeight}, was {yEnd}.");
 		}
 
+		BackingCanvas.StrokeColor = lineColor;
+		BackingCanvas.StrokeSize = lineThickness;
 		BackingCanvas.DrawLine(ToCanvasXPosition(xStart), ToCanvasYPosition(yStart), ToCanvasXPosition(xEnd), ToCanvasYPosition(yEnd));
 	}
 
@@ -156,7 +171,7 @@ public class FieldUnitsCanvas {
 		float fieldLeftX = ToCanvasXPosition(0);
 		float fieldWidth = ToCanvasXPosition(FieldWidth) - ToCanvasXPosition(0);
 		float fieldTopY = ToCanvasYPosition(0);
-		float fieldHeight = ToCanvasYPosition(FieldHeight) - ToCanvasYPosition(0);
+		float fieldHeight = ToCanvasYPosition(FieldHeight) - ToCanvasYPosition(0) + LidarArrayHeight;
 
 		float borderLeftX = fieldLeftX - BorderThickness;
 		float borderWidth = fieldWidth + 2 * BorderThickness;
@@ -170,24 +185,44 @@ public class FieldUnitsCanvas {
 		BackingCanvas.FillRectangle(fieldLeftX, fieldTopY, fieldWidth, fieldHeight);
 	}
 
+	private void DrawLidarArray() {
+
+		double lidarArrayStartFieldX = FieldWidth / 2 - LidarArrayWidth / 2;
+		float lidarArrayEndX = ToCanvasXPosition(FieldWidth / 2 + LidarArrayWidth / 2);
+
+		float lidarArrayTopY = ToCanvasYPosition(FieldHeight);
+		float lidarArrayMiddleY = ToCanvasYPosition(FieldHeight) + LidarArrayHeight / 2;
+		float lidarArrayBottomY = ToCanvasYPosition(FieldHeight) + LidarArrayHeight;
+
+		BackingCanvas.StrokeColor = LidarArrayColor;
+		BackingCanvas.StrokeSize = LidarArrayLineThickness;
+		BackingCanvas.DrawLine(ToCanvasXPosition(lidarArrayStartFieldX), lidarArrayMiddleY, lidarArrayEndX, lidarArrayMiddleY);
+
+		double sensorSpacing = LidarArrayWidth / (LidarSensorCount - 1);
+		for (int i = 0; i < LidarSensorCount; i++) {
+
+			float sensorX = ToCanvasXPosition(lidarArrayStartFieldX + sensorSpacing * i);
+
+			BackingCanvas.DrawLine(sensorX, lidarArrayTopY, sensorX, lidarArrayBottomY);
+		}
+
+	}
+
 }
 
 public class FieldDrawingManager : IDrawable {
 
-	public required double FieldWidth { get; set; }
-	public required double FieldHeight { get; set; }
+	public required float FieldWidth { get; set; }
+	public required float FieldHeight { get; set; }
 	public required int LidarSensorCount { get; set; }
-	public required double LidarArrayWidth { get; set; }
+	public required float LidarArrayWidth { get; set; }
 	public required double LidarPercentErrorStandardDeviation { get; set; }
 
 	public void Draw(ICanvas canvas, RectF dirtyRect) {
 
-		canvas.StrokeColor = Colors.Red;
-		canvas.StrokeSize = 6;
+		FieldCanvas fieldCanvas = new(FieldWidth, FieldHeight, canvas, dirtyRect, LidarSensorCount, LidarArrayWidth);
 
-		FieldUnitsCanvas fieldCanvas = new(FieldWidth, FieldHeight, canvas, dirtyRect, Colors.DarkGray, Colors.White, 5);
-
-		fieldCanvas.DrawLine(0.25, 0.5, 0.75, 1.5);
+		fieldCanvas.DrawLine(0.25, 0.5, 0.75, 1.5, Colors.Red, 1);
 	}
 
 }
@@ -215,3 +250,20 @@ public class CrossSection {
 	public ReadOnlyCollection<Point> Vertices { get; init; } = new List<Point>().AsReadOnly();
 
 }
+
+public class Polygon {
+
+	public ReadOnlyCollection<Point> Points { get; init; }
+
+	public Polygon(Point offset, double rotation) {
+
+	}
+
+	public Polygon CopyWithOffset() {
+		throw new NotImplementedException();
+	}
+
+}
+
+
+
