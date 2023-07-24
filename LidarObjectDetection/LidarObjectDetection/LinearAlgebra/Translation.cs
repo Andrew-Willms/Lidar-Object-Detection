@@ -6,6 +6,7 @@ public static class Translation {
 
 	public static Point Translate(this Point point, double angle) {
 
+		throw new NotImplementedException();
 	}
 
 }
