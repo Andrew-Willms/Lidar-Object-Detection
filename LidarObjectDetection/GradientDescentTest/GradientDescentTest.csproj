@@ -8,4 +8,9 @@
 		<LangVersion>Preview</LangVersion>
 	</PropertyGroup>
 
+	<ItemGroup>
+	  <ProjectReference Include="..\LinearAlgebra\LinearAlgebra.csproj" />
+	  <ProjectReference Include="..\Utilities\Utilities.csproj" />
+	</ItemGroup>
+
 </Project>

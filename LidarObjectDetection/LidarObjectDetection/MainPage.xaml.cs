@@ -1,7 +1,5 @@
 ﻿using System.Collections.ObjectModel;
-using LidarObjectDetection.LinearAlgebra;
-using OneOf;
-using Point = LidarObjectDetection.LinearAlgebra.Point;
+using Point = LinearAlgebra.Point2;
 
 namespace LidarObjectDetection;
 

@@ -1,6 +1,6 @@
 ﻿using OneOf;
 
-namespace LidarObjectDetection.LinearAlgebra;
+namespace LinearAlgebra;
 
 
 
@@ -16,7 +16,7 @@ public class NoIntersection {
 /// Intersection of 2D line segments.
 /// </summary>
 [GenerateOneOf]
-public partial class LineSegmentIntersection : OneOfBase<NoIntersection, Point, LineSegment> { }
+public partial class LineSegmentIntersection : OneOfBase<NoIntersection, Point2, LineSegment> { }
 
 //[GenerateOneOf]
 //public partial class LineIntersection : OneOfBase<NoIntersection, Point, Line> { }

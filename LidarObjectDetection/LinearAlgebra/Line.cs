@@ -1,4 +1,4 @@
-﻿namespace LidarObjectDetection.LinearAlgebra;
+﻿namespace LinearAlgebra;
 
 
 

@@ -1,4 +1,4 @@
-﻿namespace LidarObjectDetection.LinearAlgebra;
+﻿namespace LinearAlgebra;
 
 
 
@@ -7,27 +7,27 @@
 /// </summary>
 public class LineSegment {
 
-	public required Point Start { get; init; }
+	public required Point2 Start { get; init; }
 
-	public required Point End { get; init; }
+	public required Point2 End { get; init; }
 
-	public Vector UnitDirectionVector => new Vector(Start, End).GetUnitVector();
+	public Vector2 UnitDirectionVector2 => new Vector2(Start, End).GetUnitVector();
 
 
 
 	private LineSegment() { }
 
 	// todo determine how I want to do errors
-	public static LineSegment? Create(Point start, Point end) {
+	public static LineSegment? Create(Point2 start, Point2 end) {
 
 		return start == end
 			? null
 			: new LineSegment { Start = start, End = end };
 	}
 
-	public static LineSegment? Create(Point start, Vector displacement) {
+	public static LineSegment? Create(Point2 start, Vector2 displacement) {
 
-		return displacement == Vector.Zero
+		return displacement == Vector2.Zero
 			? null
 			: new LineSegment { Start = start, End = new() { X = start.X + displacement.X, Y = start.Y + displacement.Y } };
 	}
@@ -89,22 +89,22 @@ public class LineSegment {
 		double intersectionX = startPointWeight * other.Start.X + endPointWeight * other.End.X;
 		double intersectionY = startPointWeight * other.Start.Y + endPointWeight * other.End.Y;
 
-		return new Point { X = intersectionX, Y = intersectionY };
+		return new Point2 { X = intersectionX, Y = intersectionY };
 	}
 
-	private double SignedDistanceFromLine(Point point) {
+	private double SignedDistanceFromLine(Point2 point) {
 
 		return (End.Y - Start.Y) * (point.X - Start.X) - (End.X - Start.X) * (point.Y - Start.Y);
 	}
 
-	private double ParameterAtPoint(Point point) {
+	private double ParameterAtPoint(Point2 point) {
 
 		if (SignedDistanceFromLine(point) != 0) {
 			throw new ArgumentException();
 		}
 
-		Vector startToPoint = new(Start, point);
-		bool positiveParameter = UnitDirectionVector.SameDirectionAs(startToPoint);
+		Vector2 startToPoint = new(Start, point);
+		bool positiveParameter = UnitDirectionVector2.SameDirectionAs(startToPoint);
 		double magnitude = startToPoint.Magnitude;
 
 		return positiveParameter switch {
@@ -113,9 +113,9 @@ public class LineSegment {
 		};
 	}
 
-	private Point PointAtParameterization(double parameter) {
+	private Point2 PointAtParameterization(double parameter) {
 
-		return Start.Translate(UnitDirectionVector * parameter);
+		return Start.Translate(UnitDirectionVector2 * parameter);
 	}
 
 	public bool Collinear(LineSegment other) {
