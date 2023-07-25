@@ -4,6 +4,18 @@ namespace GradientDescentTest;
 
 
 
+/*
+ * Assignment writeup notes:
+ *
+ * Initial implementation (no checking to stop it from increasing again)
+ *
+ * Second try (stop it from going back up)
+ *
+ * Third try, add requirement that second derivative is positive to stop it from halting at gentle local maxima
+ *
+ */
+
+
 public static class GradientUtilities {
 
 	private const double DerivativeStepSize = 0.0000001;
