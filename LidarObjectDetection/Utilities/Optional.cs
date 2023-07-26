@@ -2,124 +2,124 @@
 
 
 
-public class Optional<T>
-{
+public class Optional {
 
-    private readonly T Value;
-    private bool HasValue { get; }
+	public static readonly Optional NoValue = new();
 
-    public static readonly Optional<T> NoValue = new();
+	private Optional() { }
 
-
-
-    private Optional()
-    {
-
-        HasValue = false;
-        Value = default!;
-    }
-
-    public Optional(T value)
-    {
-
-        HasValue = true;
-        Value = value;
-    }
-
-    public static implicit operator Optional<T>(T value)
-    {
-
-        return new(value);
-    }
+}
 
 
 
-    public void Match(Action<T> hasValueAction, Action noValueAction)
-    {
+//public static class OptionalExtensions
 
-        if (HasValue)
-        {
-            hasValueAction.Invoke(Value);
-            return;
-        }
 
-        noValueAction.Invoke();
-    }
+public class Optional<T> {
 
-    public TResult Match<TResult>(Func<T, TResult> hasValueAction, Func<TResult> noValueAction)
-    {
-
-        return HasValue
-            ? hasValueAction.Invoke(Value)
-            : noValueAction.Invoke();
-    }
+	private readonly T Value;
+	private bool HasValue { get; }
 
 
 
-    private bool Equals(Optional<T> other)
-    {
-        return EqualityComparer<T>.Default.Equals(Value, other.Value) && HasValue == other.HasValue;
-    }
+	private Optional() {
 
-    public override bool Equals(object? obj)
-    {
+		HasValue = false;
+		Value = default!;
+	}
 
-        if (ReferenceEquals(null, obj))
-        {
-            return false;
-        }
+	public Optional(T value) {
 
-        if (ReferenceEquals(this, obj))
-        {
-            return true;
-        }
+		HasValue = true;
+		Value = value;
+	}
 
-        return obj.GetType() == GetType() && Equals((Optional<T>)obj);
-    }
 
-    public override int GetHashCode()
-    {
-        return HashCode.Combine(Value, HasValue);
-    }
 
-    public static bool operator ==(Optional<T> left, T? right)
-    {
+	public void Match(Action<T> hasValueAction, Action noValueAction) {
 
-        return left.HasValue && left.Value!.Equals(right);
-    }
+		if (HasValue) {
+			hasValueAction.Invoke(Value);
+			return;
+		}
 
-    public static bool operator !=(Optional<T> left, T? right)
-    {
+		noValueAction.Invoke();
+	}
 
-        return !(left == right);
-    }
+	public TResult Match<TResult>(Func<T, TResult> hasValueAction, Func<TResult> noValueAction) {
 
-    public static bool operator ==(T? left, Optional<T> right)
-    {
+		return HasValue
+			? hasValueAction.Invoke(Value)
+			: noValueAction.Invoke();
+	}
 
-        return right == left;
-    }
 
-    public static bool operator !=(T? left, Optional<T> right)
-    {
 
-        return !(left == right);
-    }
+	private bool Equals(Optional<T> other) {
+		return EqualityComparer<T>.Default.Equals(Value, other.Value) && HasValue == other.HasValue;
+	}
 
-    public static bool operator ==(Optional<T> left, Optional<T> right)
-    {
+	public override bool Equals(object? obj) {
 
-        if (!left.HasValue)
-        {
-            return !right.HasValue;
-        }
+		if (ReferenceEquals(null, obj)) {
+			return false;
+		}
 
-        return right.HasValue && left.Value!.Equals(right.Value);
-    }
+		if (ReferenceEquals(this, obj)) {
+			return true;
+		}
 
-    public static bool operator !=(Optional<T> left, Optional<T> right)
-    {
-        return !(left == right);
-    }
+		return obj.GetType() == GetType() && Equals((Optional<T>)obj);
+	}
+
+	public override int GetHashCode() {
+		return HashCode.Combine(Value, HasValue);
+	}
+
+
+
+	public static bool operator ==(Optional<T> left, T? right) {
+
+		return left.HasValue && left.Value!.Equals(right);
+	}
+
+	public static bool operator !=(Optional<T> left, T? right) {
+
+		return !(left == right);
+	}
+
+	public static bool operator ==(T? left, Optional<T> right) {
+
+		return right == left;
+	}
+
+	public static bool operator !=(T? left, Optional<T> right) {
+
+		return !(left == right);
+	}
+
+	public static bool operator ==(Optional<T> left, Optional<T> right) {
+
+		if (!left.HasValue) {
+			return !right.HasValue;
+		}
+
+		return right.HasValue && left.Value!.Equals(right.Value);
+	}
+
+	public static bool operator !=(Optional<T> left, Optional<T> right) {
+		return !(left == right);
+	}
+
+
+
+	public static implicit operator Optional<T>(Optional noValue) {
+		return new();
+	}
+
+	public static implicit operator Optional<T>(T value) {
+
+		return new(value);
+	}
 
 }

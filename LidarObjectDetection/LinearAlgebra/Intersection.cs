@@ -4,23 +4,25 @@ namespace LinearAlgebra;
 
 
 
-public class NoIntersection {
+//public class NoIntersection {
 
-	public static readonly NoIntersection Instance = new();
+//	public static readonly NoIntersection Instance = new();
 
-	private NoIntersection() { }
+//	private NoIntersection() { }
 
-}
+//}
 
 /// <summary>
 /// Intersection of 2D line segments.
 /// </summary>
 [GenerateOneOf]
-public partial class LineSegmentIntersection : OneOfBase<NoIntersection, Point2, LineSegment> { }
+public partial class LineSegmentIntersection : OneOfBase<Point2, LineSegment> { }
 
 //[GenerateOneOf]
 //public partial class LineIntersection : OneOfBase<NoIntersection, Point, Line> { }
 
+[GenerateOneOf]
+public partial class PolygonIntersection : OneOfBase<LineSegmentIntersection[]> { }
 
 
 //public interface IZeroD {

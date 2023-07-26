@@ -1,4 +1,5 @@
-﻿using LidarObjectDetection.Utilities;
+﻿using System.Diagnostics;
+using LidarObjectDetection.Utilities;
 
 namespace LinearAlgebra;
 
@@ -28,6 +29,22 @@ public class Polygon {
 		//}
 
 		return new() { Points = array.ToReadOnly() };
+	}
+
+	public PolygonIntersection Intersection(LineSegment lineSegment) {
+
+		List<LineSegmentIntersection> intersections = new();
+
+		for (int i = 0; i < Points.Count; i++) {
+
+			LineSegment polygonLineSegment = LineSegment.Create(Points[i], Points[i % Points.Count]) ?? throw new UnreachableException();
+
+			Optional<LineSegmentIntersection> intersection = polygonLineSegment.Intersection(lineSegment);
+
+			intersection.Match(intersections.Add, () => { });
+		}
+
+		return intersections.ToArray();
 	}
 
 }

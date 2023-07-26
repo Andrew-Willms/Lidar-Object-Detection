@@ -1,4 +1,6 @@
-﻿namespace LinearAlgebra;
+﻿using LidarObjectDetection.Utilities;
+
+namespace LinearAlgebra;
 
 
 
@@ -37,13 +39,12 @@ public class LineSegment {
 	public bool Intersects(LineSegment other) {
 
 		return Intersection(other).Match(
-			_ => false,
 			_ => true,
-			_ => true);
+			() => false);
 	}
 
 	// todo unit test this
-	public LineSegmentIntersection Intersection(LineSegment other) {
+	public Optional<LineSegmentIntersection> Intersection(LineSegment other) {
 
 		double distanceFromStart = SignedDistanceFromLine(other.Start);
 		double distanceFromEnd = SignedDistanceFromLine(other.End);
@@ -62,25 +63,25 @@ public class LineSegment {
 
 			// if none of them overlap
 			if (parameterAtStartOfOverlap > parameterAtEndOfOverlap) {
-				return NoIntersection.Instance;
+				return Optional.NoValue;
 			}
 
 			// if only one point overlaps
 			if (parameterAtStartOfOverlap == parameterAtEndOfOverlap) {
-				return PointAtParameterization(parameterAtStartOfOverlap);
+				return (LineSegmentIntersection)PointAtParameterization(parameterAtStartOfOverlap);
 			}
 
-			return Create(PointAtParameterization(parameterAtStartOfOverlap), PointAtParameterization(parameterAtEndOfOverlap));
+			return (LineSegmentIntersection)Create(PointAtParameterization(parameterAtStartOfOverlap), PointAtParameterization(parameterAtEndOfOverlap));
 		}
 
 		// If both the the start and end points of other are on the positive side of the current line.
 		if (distanceFromStart > 0 || distanceFromEnd > 0) {
-			return NoIntersection.Instance;
+			return Optional.NoValue;
 		}
 
 		// If both the the start and end points of other are on the negative side of the current line.
 		if (distanceFromStart < 0 || distanceFromEnd < 0) {
-			return NoIntersection.Instance;
+			return Optional.NoValue;
 		}
 
 		double startPointWeight = distanceFromEnd / (distanceFromStart + distanceFromEnd); // todo: issues with negative signs here
@@ -89,7 +90,7 @@ public class LineSegment {
 		double intersectionX = startPointWeight * other.Start.X + endPointWeight * other.End.X;
 		double intersectionY = startPointWeight * other.Start.Y + endPointWeight * other.End.Y;
 
-		return new Point2 { X = intersectionX, Y = intersectionY };
+		return (LineSegmentIntersection)new Point2 { X = intersectionX, Y = intersectionY };
 	}
 
 	private double SignedDistanceFromLine(Point2 point) {
