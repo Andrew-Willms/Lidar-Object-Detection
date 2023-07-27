@@ -9,6 +9,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\GradientDescent\GradientDescent.csproj" />
 	  <ProjectReference Include="..\LinearAlgebra\LinearAlgebra.csproj" />
 	  <ProjectReference Include="..\Utilities\Utilities.csproj" />
 	</ItemGroup>

@@ -7,9 +7,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LidarObjectDetection", "Lid
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GradientDescentTest", "GradientDescentTest\GradientDescentTest.csproj", "{02CFE3C6-546E-4975-85A1-BED6839916B6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LinearAlgebra", "LinearAlgebra\LinearAlgebra.csproj", "{5A42AF4E-CAA7-4D5A-A772-149D43094576}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LinearAlgebra", "LinearAlgebra\LinearAlgebra.csproj", "{5A42AF4E-CAA7-4D5A-A772-149D43094576}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utilities", "Utilities\Utilities.csproj", "{0B85832D-49FA-42ED-80B1-085E46C5252E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Utilities", "Utilities\Utilities.csproj", "{0B85832D-49FA-42ED-80B1-085E46C5252E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GradientDescent", "GradientDescent\GradientDescent.csproj", "{BB55B94B-AF88-4373-89F6-FBBEC23E6E54}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,6 +37,10 @@ Global
 		{0B85832D-49FA-42ED-80B1-085E46C5252E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0B85832D-49FA-42ED-80B1-085E46C5252E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0B85832D-49FA-42ED-80B1-085E46C5252E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB55B94B-AF88-4373-89F6-FBBEC23E6E54}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB55B94B-AF88-4373-89F6-FBBEC23E6E54}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB55B94B-AF88-4373-89F6-FBBEC23E6E54}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB55B94B-AF88-4373-89F6-FBBEC23E6E54}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,5 +1,6 @@
-﻿using GradientDescentTest;
+﻿using GradientDescent;
 using LinearAlgebra;
+
 
 
 double Function1(Point3 point) => point.X * point.X + point.Y * point.Y + point.Z * point.Z;

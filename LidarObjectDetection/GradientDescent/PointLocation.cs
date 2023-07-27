@@ -1,6 +1,6 @@
 ﻿using LinearAlgebra;
 
-namespace GradientDescentTest; 
+namespace GradientDescent; 
 
 
 
