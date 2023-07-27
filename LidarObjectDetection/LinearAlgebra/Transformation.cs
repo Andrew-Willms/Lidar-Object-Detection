@@ -4,6 +4,7 @@
 
 public static class Transformation {
 
+	// make these addition operators on the Point2/3 class
 	public static Point2 Translate(this Point2 point, Vector2 offset) {
 
 		return new() { X = point.X + offset.X, Y = point.Y + offset.Y };

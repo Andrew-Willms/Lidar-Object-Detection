@@ -21,7 +21,7 @@
 				Drawable="{Binding Drawable, Mode=OneWay}"
 				Grid.Row="0"/>
 
-			<VerticalStackLayout
+			<!--<VerticalStackLayout
 				Spacing="10"
 				Padding="10"
 				Grid.Row="1">
@@ -135,7 +135,7 @@
 
 				</toolkit:Expander>
 
-			</VerticalStackLayout>
+			</VerticalStackLayout>-->
 
 		</Grid>
 

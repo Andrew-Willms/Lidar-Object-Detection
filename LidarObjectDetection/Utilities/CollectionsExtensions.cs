@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
+using LidarObjectDetection.Utilities;
 
-namespace LidarObjectDetection.Utilities;
+namespace Utilities;
 
 
 
@@ -11,10 +12,17 @@ public static class CollectionExtensions {
 		return new() { item };
 	}
 
+	public static ReadOnlyArray<T> ReadOnlyListify<T>(this T item) {
+
+		return new List<T> { item }.ToReadOnly();
+	}
+
 	public static ReadOnlyArray<T> ToReadOnly<T>(this IEnumerable<T> enumerable) {
 
 		return new(enumerable);
 	}
+
+
 
 	public static void AddIfNotNull<T>(this List<T> list, T? newValue) {
 
@@ -43,9 +51,9 @@ public static class CollectionExtensions {
 	}
 
 	public static IEnumerable<TTarget?> SelectIfNotNull<TCollection, TTarget>
-		(this IEnumerable<TCollection> enumerable, Func<TCollection, TTarget?> selector) {
+		(this IEnumerable<TCollection> enumerable, Func<TCollection, TTarget?> transformer) {
 
-		return enumerable.Select(selector).Where(x => x is not null);
+		return enumerable.Select(transformer).Where(x => x is not null);
 	}
 
 	public static IEnumerable<TTarget> SelectIfHasValue<TCollection, TTarget>
@@ -53,6 +61,13 @@ public static class CollectionExtensions {
 
 		return enumerable
 			.Select(transformer)
+			.Where(x => x.Match(_ => true, () => false))
+			.Select(x => x.Match(value => value, () => throw new UnreachableException()));
+	}
+
+	public static IEnumerable<TTarget> WhereHasValue<TTarget>(this IEnumerable<Optional<TTarget>> enumerable) {
+
+		return enumerable
 			.Where(x => x.Match(_ => true, () => false))
 			.Select(x => x.Match(value => value, () => throw new UnreachableException()));
 	}
@@ -72,9 +87,36 @@ public static class CollectionExtensions {
 
 
 
-	public static ReadOnlyArray<T> ReadOnlyListify<T>(this T item) {
+	public static T? SelectMin<T>(this IEnumerable<T> enumerable) {
 
-		return new List<T> { item }.ToReadOnly();
+		return enumerable.Min();
+	}
+
+	public static T? SelectMin<T, TComparable>(this IEnumerable<T> enumerable, Func<T, TComparable> comparator) 
+		where TComparable : IComparable {
+
+		T[] array = enumerable as T[] ?? enumerable.ToArray();
+
+		if (array.IsEmpty()) {
+			return default;
+		}
+
+		T minimumEntry = array.First();
+		TComparable minimumValue = comparator(array.First());
+
+		foreach (T item in array) {
+
+			TComparable currentValue = comparator(item);
+
+			if (currentValue.CompareTo(minimumValue) >= 0) {
+				continue;
+			}
+
+			minimumValue = currentValue;
+			minimumEntry = item;
+		}
+
+		return minimumEntry;
 	}
 
 

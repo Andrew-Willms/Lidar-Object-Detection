@@ -91,6 +91,14 @@ public readonly struct Vector2 {
 		return new() { X = X / Magnitude, Y = Y / Magnitude };
 	}
 
+	public Vector2 GetClockwisePerpendicularVector() {
+		return new() { X = -Y, Y = X };
+	}
+
+	public Vector2 GetCounterClockwisePerpendicularVector() {
+		return new() { X = Y, Y = -X };
+	}
+
 	public static Vector2 Max(Vector2 left, Vector2 right) {
 
 		return left.Magnitude > right.Magnitude
