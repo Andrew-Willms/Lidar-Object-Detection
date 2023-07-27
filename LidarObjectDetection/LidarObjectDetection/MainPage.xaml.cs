@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using LinearAlgebra;
+using Microsoft.VisualBasic;
 
 namespace LidarObjectDetection;
 
@@ -51,9 +52,9 @@ public partial class MainPage : ContentPage {
 		FieldWidth = 3,
 		FieldHeight = 2,
 		LidarArray = new() {
-			SensorCount = 15,
+			SensorCount = 16,
 			LidarPercentErrorStandardDeviation = 1,
-			LidarRange = 5,
+			LidarRange = 2,
 			LeftCorner = new() { X = 1.2, Y = 0 },
 			RightCorner = new() { X = 1.8, Y = 0 },
 		}
@@ -85,16 +86,19 @@ public class FieldDrawingManager : IDrawable {
 
 		FieldCanvas fieldCanvas = new(FieldWidth, FieldHeight, canvas, dirtyRect, LidarArray);
 
-		Polygon square = Polygon.Create(new Point2[] { new(0, 0), new(0.1, 0), new(0.1, 0.1), new(0, 0.1) }) ?? throw new UnreachableException();
-		Polygon transformedSquare = square.Rotate(30).Translate(new(1.5, 0.5));
+		foreach (LineSegment beam in LidarArray.LidarBeams) {
+			fieldCanvas.DrawLine((float)beam.Start.X, (float)beam.Start.Y, (float)beam.End.X, (float)beam.End.Y, Colors.CornflowerBlue, 2);
+		}
+
+		Polygon square = Polygon.Create(new Point2[] { new(0, 0), new(0.2, 0), new(0.2, 0.2), new(0, 0.2) }) ?? throw new UnreachableException();
+		Polygon transformedSquare = square.Rotate(30).Translate(new(1.45, 0.5));
+		fieldCanvas.DrawPolygon(transformedSquare, Colors.Red, 1);
 
 		Point2[] points = LidarArray.SimulateLidarReading(transformedSquare);
 
 		foreach (Point2 point in points) {
 			fieldCanvas.DrawPoint((float)point.X, (float)point.Y, Colors.Orange, 2);
 		}
-
-		fieldCanvas.DrawPolygon(transformedSquare, Colors.Red, 1);
 	}
 
 }

@@ -38,22 +38,15 @@ public class Polygon {
 	}
 
 	//public Point2[] NearestIntersection(LineSegment lineSegment, Point2 point) {
-
 	//	LineSegmentIntersection[] intersections = Intersection(lineSegment).AsT0;
-
 	//	foreach (LineSegmentIntersection intersection in intersections) {
-
 	//		intersection.Match(
 	//			point => point,
 	//			lineSegment => {
-
 	//				return new Vector2()
-
 	//			}
 	//		);
-
 	//	}
-
 	//}
 
 }

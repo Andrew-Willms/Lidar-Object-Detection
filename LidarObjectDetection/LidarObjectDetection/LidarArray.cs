@@ -37,7 +37,6 @@ public class LidarArray {
 
 	public IEnumerable<LineSegment> LidarBeams {
 		get {
-
 			Vector2 beamDirection = new Vector2(LeftCorner, RightCorner).GetCounterClockwisePerpendicularVector();
 			Vector2 beamVector = beamDirection.GetUnitVector() * LidarRange;
 

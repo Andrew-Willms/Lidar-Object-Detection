@@ -46,20 +46,20 @@ public class LineSegment {
 	// todo unit test this
 	public Optional<LineSegmentIntersection> Intersection(LineSegment other) {
 
-		double distanceFromStart = SignedDistanceFromLine(other.Start);
-		double distanceFromEnd = SignedDistanceFromLine(other.End);
+		double distanceToStartOfOther = SignedDistanceFromLine(other.Start);
+		double distanceToEndOfOther = SignedDistanceFromLine(other.End);
+
+		double minParameterization = Math.Min(ParameterAtPoint(Start), ParameterAtPoint(End));
+		double maxParameterization = Math.Max(ParameterAtPoint(Start), ParameterAtPoint(End));
 
 		// if the lines are collinear
-		if (distanceFromStart == 0 && distanceFromEnd == 0) {
+		if (distanceToStartOfOther == 0 && distanceToEndOfOther == 0) {
 
-			double minParameterization = Math.Min(ParameterAtPoint(Start), ParameterAtPoint(End));
-			double maxParameterization = Math.Max(ParameterAtPoint(Start), ParameterAtPoint(End));
+			double minParameterizationOfOther = Math.Min(ParameterAtPoint(other.Start), ParameterAtPoint(other.End));
+			double maxParameterizationOfOther = Math.Max(ParameterAtPoint(other.Start), ParameterAtPoint(other.End));
 
-			double minOtherParameterization = Math.Min(ParameterAtPoint(other.Start), ParameterAtPoint(other.End));
-			double maxOtherParameterization = Math.Max(ParameterAtPoint(other.Start), ParameterAtPoint(other.End));
-
-			double parameterAtStartOfOverlap = Math.Max(minParameterization, minOtherParameterization);
-			double parameterAtEndOfOverlap = Math.Min(maxParameterization, maxOtherParameterization);
+			double parameterAtStartOfOverlap = Math.Max(minParameterization, minParameterizationOfOther);
+			double parameterAtEndOfOverlap = Math.Min(maxParameterization, maxParameterizationOfOther);
 
 			// if none of them overlap
 			if (parameterAtStartOfOverlap > parameterAtEndOfOverlap) {
@@ -67,7 +67,7 @@ public class LineSegment {
 			}
 
 			// if only one point overlaps
-			if (parameterAtStartOfOverlap == parameterAtEndOfOverlap) {
+			if (Math.Abs(parameterAtStartOfOverlap - parameterAtEndOfOverlap) < Point2.ComparisonTolerance) {
 				return (LineSegmentIntersection)PointAtParameterization(parameterAtStartOfOverlap);
 			}
 
@@ -75,22 +75,29 @@ public class LineSegment {
 		}
 
 		// If both the the start and end points of other are on the positive side of the current line.
-		if (distanceFromStart > 0 || distanceFromEnd > 0) {
+		if (distanceToStartOfOther > 0 && distanceToEndOfOther > 0) {
 			return Optional.NoValue;
 		}
 
 		// If both the the start and end points of other are on the negative side of the current line.
-		if (distanceFromStart < 0 || distanceFromEnd < 0) {
+		if (distanceToStartOfOther < 0 && distanceToEndOfOther < 0) {
 			return Optional.NoValue;
 		}
 
-		double startPointWeight = distanceFromEnd / (distanceFromStart + distanceFromEnd); // todo: issues with negative signs here
-		double endPointWeight = distanceFromStart / (distanceFromStart + distanceFromEnd); // todo: issues with negative signs here
+		double startPointWeight = Math.Abs(distanceToEndOfOther) / (Math.Abs(distanceToStartOfOther) + Math.Abs(distanceToEndOfOther));
+		double endPointWeight = Math.Abs(distanceToStartOfOther) / (Math.Abs(distanceToStartOfOther) + Math.Abs(distanceToEndOfOther));
 
 		double intersectionX = startPointWeight * other.Start.X + endPointWeight * other.End.X;
 		double intersectionY = startPointWeight * other.Start.Y + endPointWeight * other.End.Y;
 
-		return (LineSegmentIntersection)new Point2 { X = intersectionX, Y = intersectionY };
+		Point2 potentialIntersection = new() { X = intersectionX, Y = intersectionY };
+		double parameterizationAtIntersection = ParameterAtPoint(potentialIntersection);
+
+		if (minParameterization <= parameterizationAtIntersection && parameterizationAtIntersection <= maxParameterization) {
+			return (LineSegmentIntersection)potentialIntersection;
+		}
+
+		return Optional.NoValue;
 	}
 
 	private double SignedDistanceFromLine(Point2 point) {
@@ -100,8 +107,12 @@ public class LineSegment {
 
 	private double ParameterAtPoint(Point2 point) {
 
-		if (SignedDistanceFromLine(point) != 0) {
-			throw new ArgumentException();
+		//if (SignedDistanceFromLine(point) != 0) {
+		//	throw new ArgumentException();
+		//}
+
+		if (Start == point) {
+			return 0;
 		}
 
 		Vector2 startToPoint = new(Start, point);

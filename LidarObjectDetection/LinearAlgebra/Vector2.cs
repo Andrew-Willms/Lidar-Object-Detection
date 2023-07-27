@@ -92,11 +92,11 @@ public readonly struct Vector2 {
 	}
 
 	public Vector2 GetClockwisePerpendicularVector() {
-		return new() { X = -Y, Y = X };
+		return new() { X = Y, Y = -X };
 	}
 
 	public Vector2 GetCounterClockwisePerpendicularVector() {
-		return new() { X = Y, Y = -X };
+		return new() { X = -Y, Y = X };
 	}
 
 	public static Vector2 Max(Vector2 left, Vector2 right) {
@@ -116,7 +116,7 @@ public readonly struct Vector2 {
 
 
 	public static bool operator ==(Vector2 left, Vector2 right) {
-		return left.X == right.X && left.Y == right.Y;
+		return Math.Abs(left.X - right.X) < Point2.ComparisonTolerance && Math.Abs(left.Y - right.Y) < Point2.ComparisonTolerance;
 	}
 
 	public static bool operator !=(Vector2 left, Vector2 right) {

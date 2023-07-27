@@ -11,6 +11,8 @@ public readonly struct Point2 {
 	public required double Y { get; init; }
 
 
+	public const double ComparisonTolerance = 10e-6;
+
 
 	[SetsRequiredMembers]
 	public Point2(double x, double y) {
@@ -22,7 +24,7 @@ public readonly struct Point2 {
 
 	public static bool operator ==(Point2 left, Point2 right) {
 
-		return left.X == right.X && left.Y == right.Y;
+		return Math.Abs(left.X - right.X) < ComparisonTolerance && Math.Abs(left.Y - right.Y) < ComparisonTolerance;
 	}
 
 	public static bool operator !=(Point2 left, Point2 right) {
