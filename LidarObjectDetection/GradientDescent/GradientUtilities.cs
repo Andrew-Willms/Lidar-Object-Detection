@@ -1,4 +1,5 @@
-﻿using LinearAlgebra;
+﻿using System.Diagnostics;
+using LinearAlgebra;
 
 namespace GradientDescent; 
 
@@ -18,12 +19,12 @@ namespace GradientDescent;
 
 public static class GradientUtilities {
 
-	private const double DerivativeStepSize = 0.0000001;
-	private const double ValueDifferenceConversionThreshold = 0.0001;
-	private const double PointDifferenceConversionThreshold = 0.0001;
-	private const double GradientStepScalingFactor = 1;
-	private const double MaxGradientStepSize = 10;
-	private const int MaxRetryCount = 10;
+	private const double DerivativeStepSize = 0.00000001;
+	private const double ValueDifferenceConversionThreshold = 0.00001;
+	private const double PointDifferenceConversionThreshold = 0.00001;
+	private const double GradientStepScalingFactor = 0.01;
+	private const double MaxGradientStepSize = 0.1;
+	private const int MaxRetryCount = 20;
 
 
 
@@ -49,6 +50,13 @@ public static class GradientUtilities {
 
 		int iterationCount = 0;
 
+		//Console.WriteLine($"Current Point {currentPoint}");
+		//Console.WriteLine($"Current Value {currentValue}");
+		//Console.WriteLine("");
+		Trace.WriteLine($"Current Point {currentPoint}");
+		Trace.WriteLine($"Current Value {currentValue}");
+		Trace.WriteLine("");
+
 		bool valueChangeWithinThreshold;
 		bool pointChangeWithinThreshold;
 		do {
@@ -56,6 +64,12 @@ public static class GradientUtilities {
 			Point3 previousPoint = currentPoint;
 
 			Vector3 step = -1 * GradientStepScalingFactor * Gradient(function, previousPoint);
+
+			if (step.Magnitude == 0) {
+				return currentPoint;
+				// todo try increasing gradientStepSize if it hits zero?
+			}
+
 			step = Vector3.Min(step, step.GetUnitVector() * MaxGradientStepSize);
 
 			int retryCount = 0;
@@ -73,23 +87,28 @@ public static class GradientUtilities {
 				currentValue = previousValue;
 			}
 
-			Console.WriteLine($"Step {step}");
-			Console.WriteLine($"Current Point {currentPoint}");
-			Console.WriteLine($"Current Value {currentValue}");
-			Console.WriteLine("");
+			//Console.WriteLine($"Step {step}");
+			//Console.WriteLine($"Current Point {currentPoint}");
+			//Console.WriteLine($"Current Value {currentValue}");
+			//Console.WriteLine("");
+			Trace.WriteLine($"Step {step}");
+			Trace.WriteLine($"Current Point {currentPoint}");
+			Trace.WriteLine($"Current Value {currentValue}");
+			Trace.WriteLine("");
 
 			valueChangeWithinThreshold = Math.Abs(currentValue - previousValue) < ValueDifferenceConversionThreshold;
 			pointChangeWithinThreshold = new Vector3(currentPoint, previousPoint).Magnitude < PointDifferenceConversionThreshold;
 
 			iterationCount++;
 
-		} while (!valueChangeWithinThreshold || pointChangeWithinThreshold! || SecondDerivativesAreNegativeOrZero(function, currentPoint));
+		} while (!valueChangeWithinThreshold || !pointChangeWithinThreshold || SecondDerivativesAreNegativeOrZero(function, currentPoint));
 
-		Console.WriteLine(iterationCount);
+		//Console.WriteLine(iterationCount);
+		Trace.WriteLine(iterationCount);
 
 		return currentPoint;
 	}
-
+	 
 	public static Point3 MultiStartGradientDescent(Func<Point3, double> function, Point3 rangeStart,
 		Point3 rangeEnd, int xTestCount, int yTestCount, int zTestCount) {
 

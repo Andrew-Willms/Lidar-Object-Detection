@@ -1,5 +1,7 @@
 ﻿using System.Diagnostics;
+using GradientDescent;
 using LinearAlgebra;
+using Microsoft.UI.Xaml.Controls;
 
 namespace LidarObjectDetection;
 
@@ -81,6 +83,37 @@ public class FieldDrawingManager : IDrawable {
 	public required float FieldHeight { get; init; }
 	public required LidarArray LidarArray { get; init; }
 
+	private bool ThingsHaveAlreadyBeenComputed = false;
+	private Point3 Minimum;
+	private Polygon FinalGuessPolygon = null!;
+	private double MinimumError;
+
+	private void ComputeThings() {
+
+		if (ThingsHaveAlreadyBeenComputed) {
+			return;
+		}
+
+		ThingsHaveAlreadyBeenComputed = true;
+
+		Polygon square = Polygon.Create(new Point2[] { new(0, 0), new(0.2, 0), new(0.2, 0.2), new(0, 0.2) }) ?? throw new UnreachableException();
+		Polygon transformedSquare = square.Rotate(30).Translate(new(1.45, 0.5));
+
+		Point2[] lidarPoints = LidarArray.SimulateLidarReading(transformedSquare);
+
+		Minimum = GradientUtilities.MultiStartGradientDescent(
+			GetErrorFunction(LidarArray, square, lidarPoints),
+			new() { X = 1.3, Y = 0.2, Z = 0 },
+			new() { X = 1.6, Y = 0.8, Z = 90 },
+			3, 3, 10);
+
+		MinimumError = GetErrorFunction(LidarArray, square, lidarPoints)(Minimum);
+
+		Trace.WriteLine(MinimumError);
+
+		FinalGuessPolygon = square.Rotate(Minimum.Z).Translate(new(Minimum.X, Minimum.Y));
+	}
+
 	public void Draw(ICanvas canvas, RectF dirtyRect) {
 
 		FieldCanvas fieldCanvas = new(FieldWidth, FieldHeight, canvas, dirtyRect, LidarArray);
@@ -93,11 +126,27 @@ public class FieldDrawingManager : IDrawable {
 		Polygon transformedSquare = square.Rotate(30).Translate(new(1.45, 0.5));
 		fieldCanvas.DrawPolygon(transformedSquare, Colors.Red, 1);
 
-		Point2[] points = LidarArray.SimulateLidarReading(transformedSquare);
+		Point2[] lidarPoints = LidarArray.SimulateLidarReading(transformedSquare);
 
-		foreach (Point2 point in points) {
+		foreach (Point2 point in lidarPoints) {
 			fieldCanvas.DrawPoint((float)point.X, (float)point.Y, Colors.Orange, 2);
 		}
+
+		ComputeThings();
+
+		fieldCanvas.DrawPolygon(FinalGuessPolygon, Colors.Blue, 1);
+	}
+
+	private static Func<Point3, double> GetErrorFunction(LidarArray lidarArray, Polygon crossSection, IEnumerable<Point2> lidarPoints) {
+
+		return state => {
+
+			Polygon crossSectionTransformed = crossSection.Rotate(state.Z).Translate(new() { X = state.X, Y = state.Y });
+
+			Point2[] guessPoints = lidarArray.SimulateLidarReading(crossSectionTransformed);
+
+			return PointLocation.AverageDistanceToNearestLidarPoint(lidarPoints, guessPoints);
+		};
 	}
 
 }

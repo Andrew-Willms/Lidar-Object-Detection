@@ -13,9 +13,9 @@ public static class PointLocation {
 		return lidarPoints.Select(lidarPoint => new Vector2(lidarPoint, point).Magnitude).Min();
 	}
 
-	public static double AverageDistanceToNearestLidarPoint(IEnumerable<Point2> lidarPoints, IEnumerable<Point2> points) {
+	public static double AverageDistanceToNearestLidarPoint(IEnumerable<Point2> lidarPoints, IEnumerable<Point2> guessPoints) {
 
-		return points.Average(x => DistanceToNearestLidarPoint(lidarPoints, x));
+		return guessPoints.Average(x => DistanceToNearestLidarPoint(lidarPoints, x));
 	}
 
 }

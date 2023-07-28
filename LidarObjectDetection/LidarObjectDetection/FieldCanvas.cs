@@ -79,7 +79,7 @@ public class FieldCanvas {
 			throw new ArgumentException($"{nameof(xStart)} must be between {0} and {FieldWidth}, was {xStart}.");
 		}
 
-		if (yStart < 0 || xStart > FieldHeight) {
+		if (yStart < 0 || yStart > FieldHeight) {
 			throw new ArgumentException($"{nameof(yStart)} must be between {0} and {FieldHeight}, was {yStart}.");
 		}
 
