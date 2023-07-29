@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using LinearAlgebra;
 
-namespace GradientDescent; 
+namespace GradientDescent;
 
 
 
@@ -15,6 +15,14 @@ namespace GradientDescent;
  * Third try, add requirement that second derivative is positive to stop it from halting at gentle local maxima
  *
  */
+
+/*  Ideas to make things better
+ *  
+ *  - When numerically differentiating it might be better to take a step in the direction you were last going in
+ *  - Just make a test suite in general
+ *  - make better visualization
+ */
+
 
 
 public static class GradientUtilities {
@@ -179,4 +187,4 @@ public static class GradientUtilities {
 		return xSecondPartial <= 0 && ySecondPartial <= 0 && zSecondPartial <= 0;
 	}
 
-}
+} 

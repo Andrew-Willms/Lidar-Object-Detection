@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics;
 using GradientDescent;
 using LinearAlgebra;
-using Microsoft.UI.Xaml.Controls;
 
 namespace LidarObjectDetection;
 
@@ -83,7 +82,7 @@ public class FieldDrawingManager : IDrawable {
 	public required float FieldHeight { get; init; }
 	public required LidarArray LidarArray { get; init; }
 
-	private bool ThingsHaveAlreadyBeenComputed = false;
+	private bool ThingsHaveAlreadyBeenComputed;
 	private Point3 Minimum;
 	private Polygon FinalGuessPolygon = null!;
 	private double MinimumError;
@@ -131,6 +130,16 @@ public class FieldDrawingManager : IDrawable {
 		foreach (Point2 point in lidarPoints) {
 			fieldCanvas.DrawPoint((float)point.X, (float)point.Y, Colors.Orange, 2);
 		}
+
+		//for (double x = 1.3; x <= 1.6; x += 0.1) {
+		//	for (double y = 0.2; y <= 0.8; y += 0.2) {
+		//		for (double z = 0; z <= 90; z += 9) {
+
+		//			Polygon guess = square.Rotate(z).Translate(new(x, y));
+		//			fieldCanvas.DrawPolygon(guess, Colors.BlueViolet, 1);
+		//		}
+		//	}
+		//}
 
 		ComputeThings();
 
