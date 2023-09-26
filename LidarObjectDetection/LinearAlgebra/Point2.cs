@@ -1,5 +1,7 @@
 ﻿namespace LinearAlgebra; 
 
-public class Point2 {
+
+
+public class Point2  {
 	
 }
