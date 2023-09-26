@@ -18,7 +18,7 @@ public class DetectionParameters {
 
 	public required int StartingPointCount { get; init; }
 
-	public required RectangularRegion[] SearchRegions { get; init; }
+	public required RectangularRegion SearchRegion { get; init; }
 
 	public required StartingPointDistributor StartingPointDistributor { get; init; }
 
@@ -40,7 +40,7 @@ public class DetectionParameters {
 
 }
 
-public delegate Point3[] StartingPointDistributor(int startingPointCount, RectangularRegion[] searchRegions);
+public delegate Point3[] StartingPointDistributor(int startingPointCount, RectangularRegion searchRegion);
 
 public delegate double NearestDistanceCalculator(Point2[] otherPoints, Point2 point);
 
