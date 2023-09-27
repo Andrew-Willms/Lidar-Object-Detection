@@ -42,10 +42,6 @@ public class DetectionParameters {
 
 public delegate Point3[] StartingPointDistributor(int startingPointCount, RectangularRegion searchRegion);
 
-public delegate double NearestDistanceCalculator(Point2[] otherPoints, Point2 point);
-
-public delegate Point3[] CumulativeErrorFunction(double[] errors);
-
 
 
 public class GradientDescentParameters {
@@ -54,7 +50,5 @@ public class GradientDescentParameters {
 
 
 }
-
-public delegate void GradientApproximation(Func<Point3, double> function, Point3 point);
 
 public delegate bool ConvergenceCriteria();
