@@ -16,15 +16,15 @@ public interface ILeastDistanceCalculator {
 
 
 
-public class LeastDistanceCalculator : ILeastDistanceCalculator {
+public class DumbLeastDistanceCalculator : ILeastDistanceCalculator {
 
 	private Point2[] OtherPoints { get; }
 
-	private LeastDistanceCalculator(Point2[] otherPoints) {
+	private DumbLeastDistanceCalculator(Point2[] otherPoints) {
 		OtherPoints = otherPoints;
 	}
 
-	public static LeastDistanceCalculator? Create(Point2[] otherPoints) {
+	public static DumbLeastDistanceCalculator? Create(Point2[] otherPoints) {
 
 		return otherPoints.Any() 
 			? new(otherPoints) 
