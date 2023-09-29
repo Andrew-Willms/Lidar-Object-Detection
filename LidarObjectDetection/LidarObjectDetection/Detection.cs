@@ -6,7 +6,7 @@ namespace LidarObjectDetection;
 
 public static class Detection {
 
-	public static Point3[] Detect(Point2[] lidarPoints, Polygon crossSection, DetectionParameters parameters) {
+	public static Point3 Detect(Point2[] lidarPoints, Polygon crossSection, DetectionParameters parameters) {
 
 		throw new NotImplementedException();
 	}
@@ -28,7 +28,7 @@ public class DetectionParameters {
 
 
 
-	public required NearestDistanceCalculator NearestDistanceCalculator { get; init; }
+	public required LeastDistanceCalculatorCreator LeastDistanceCalculatorCreator { get; init; }
 
 	public required CumulativeErrorFunction CumulativeErrorFunction { get; init; }
 
