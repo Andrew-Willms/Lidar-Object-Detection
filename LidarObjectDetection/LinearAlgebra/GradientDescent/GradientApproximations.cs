@@ -5,13 +5,15 @@ namespace LidarObjectDetection;
 
 
 
-public delegate Vector3 GradientApproximation(Func<Point3, double> function, Point3 point);
+public delegate Vector3 GradientApproximation(Func<Point3, double> function, Point3 point, Vector3 previousGradient);
+
+public delegate Vector3 GradientStepSizeCalculator(Vector3 gradient);
 
 
 
 public static class GradientApproximations {
 
-	public static Vector3 Basic(Func<Point3, double> function, Point3 startingPoint) {
+	public static Vector3 Basic(Func<Point3, double> function, Point3 startingPoint, GradientStepSizeCalculator stepSizeCalculator) {
 
 		double valueAtPoint = function(startingPoint);
 
@@ -24,6 +26,16 @@ public static class GradientApproximations {
 		double zPartial = (valueAtZOffset - valueAtPoint) / DerivativeStepSize;
 
 		return new() { X = xPartial, Y = yPartial, Z = zPartial };
+	}
+
+}
+
+
+
+public static class GradientStepSizeCalculators {
+
+	public static Vector3 LimitedScalingFactor(Vector3 scalingFactor, Vector3 maximumStepSize) {
+
 	}
 
 }
