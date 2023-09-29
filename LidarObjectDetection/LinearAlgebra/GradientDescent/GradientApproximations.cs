@@ -4,7 +4,6 @@ namespace LidarObjectDetection;
 
 
 
-
 public delegate Vector3 GradientApproximation(Func<Point3, double> function, Point3 point, Vector3 previousGradient);
 
 public delegate Vector3 GradientStepSizeCalculator(Vector3 gradient);
