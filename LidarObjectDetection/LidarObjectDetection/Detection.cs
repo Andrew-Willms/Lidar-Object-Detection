@@ -16,6 +16,7 @@ public static class Detection {
 }
 
 
+
 public class DetectionParameters {
 
 	public required int StartingPointCount { get; init; }
@@ -41,5 +42,7 @@ public class DetectionParameters {
 	public required Point3 RobotVelocity { get; init; }
 
 }
+
+
 
 public delegate Point3[] StartingPointDistributor(int startingPointCount, RectangularRegion searchRegion);
