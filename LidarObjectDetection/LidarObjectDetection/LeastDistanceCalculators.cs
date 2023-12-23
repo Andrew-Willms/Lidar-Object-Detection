@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using LinearAlgebra;
 
 namespace LidarObjectDetection;
@@ -17,9 +18,13 @@ public interface ILeastDistanceCalculator {
 
 
 
-public class DumbLeastDistanceCalculator : ILeastDistanceCalculator {
+public readonly struct DumbLeastDistanceCalculator : ILeastDistanceCalculator {
 
 	private Point2[] OtherPoints { get; }
+
+	public DumbLeastDistanceCalculator() {
+		throw new InvalidOperationException("Use create function");
+	}
 
 	private DumbLeastDistanceCalculator(Point2[] otherPoints) {
 		OtherPoints = otherPoints;
