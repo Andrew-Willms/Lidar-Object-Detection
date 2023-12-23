@@ -12,9 +12,10 @@ public static class GradientDescent {
 #endif
 		) {
 
-		Vector3 previousGradient = parameters.GradientApproximation(function, startingPoint, parameters.ApproximationDeltaSize);
+		Vector3 previousGradient = parameters.InitialGradientApproximation(function, startingPoint);
 		Vector3 step = parameters.InitialStepCalculator(previousGradient);
 		Point3 previousPoint = startingPoint.Translate(step);
+		int iterationCount = 1;
 
 #if DEBUG
 		data = new() { Parameters = parameters };
@@ -25,23 +26,26 @@ public static class GradientDescent {
 
 		while (true) {
 
-			Vector3 gradient = parameters.GradientApproximation(function, startingPoint, parameters.ApproximationDeltaSize);
-			step = parameters.StepCalculator(previousGradient, gradient);
+			iterationCount++;
+
+			Vector3 gradient = parameters.GradientApproximation(function, startingPoint, step);
+			step = parameters.StepCalculator(step, previousGradient, gradient);
 			Point3 point = previousPoint.Translate(step);
 
-			previousPoint = point;
-
 #if DEBUG
-			data.Gradients.Add(previousGradient);
+			data.Gradients.Add(gradient);
 			data.Steps.Add(step);
-			data.Points.Add(previousPoint);
+			data.Points.Add(point);
 #endif
 
-			if (parameters.ConvergenceCriteria()) {
+			previousPoint = point;
+			previousGradient = gradient;
+
+			if (parameters.ConvergenceCriteria(previousPoint, point, previousGradient, previousGradient)) {
 				return point;
 			}
 
-			if (parameters.FailureCriteria()) {
+			if (parameters.FailureCriteria(iterationCount, previousPoint, point, previousGradient, previousGradient)) {
 				return null;
 			}
 		}

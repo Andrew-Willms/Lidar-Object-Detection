@@ -4,9 +4,9 @@
 
 public class GradientDescentParameters {
 
-	public required GradientApproximation GradientApproximation { get; init; }
+	public required InitialGradientApproximation InitialGradientApproximation { get; init; }
 
-	public required Vector3 ApproximationDeltaSize { get; init; }
+	public required GradientApproximation GradientApproximation { get; init; }
 
 	public required InitialStepCalculator InitialStepCalculator { get; init; }
 
