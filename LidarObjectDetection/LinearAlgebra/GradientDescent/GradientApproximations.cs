@@ -1,4 +1,6 @@
-﻿namespace LinearAlgebra.GradientDescent;
+﻿using System;
+
+namespace LinearAlgebra.GradientDescent;
 
 
 
