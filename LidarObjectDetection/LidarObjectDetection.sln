@@ -3,13 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34112.27
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gui", "Gui\Gui.csproj", "{2F6FA1F2-BA37-4A22-B852-F46BC2811354}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LidarObjectDetection", "LidarObjectDetection\LidarObjectDetection.csproj", "{E1ED5409-2787-4DDA-B1EB-CDCDD8434836}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LidarObjectDetection", "LidarObjectDetection\LidarObjectDetection.csproj", "{E1ED5409-2787-4DDA-B1EB-CDCDD8434836}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LinearAlgebra", "LinearAlgebra\LinearAlgebra.csproj", "{837C6F21-448E-4C22-90A8-D50AB42B5310}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LinearAlgebra", "LinearAlgebra\LinearAlgebra.csproj", "{837C6F21-448E-4C22-90A8-D50AB42B5310}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PerformanceTests", "PerformanceTests\PerformanceTests.csproj", "{BBAEE58C-1BB9-4DC8-A881-B49E18A2DEF3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PerformanceTests", "PerformanceTests\PerformanceTests.csproj", "{BBAEE58C-1BB9-4DC8-A881-B49E18A2DEF3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,12 +15,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{2F6FA1F2-BA37-4A22-B852-F46BC2811354}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2F6FA1F2-BA37-4A22-B852-F46BC2811354}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2F6FA1F2-BA37-4A22-B852-F46BC2811354}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{2F6FA1F2-BA37-4A22-B852-F46BC2811354}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2F6FA1F2-BA37-4A22-B852-F46BC2811354}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2F6FA1F2-BA37-4A22-B852-F46BC2811354}.Release|Any CPU.Deploy.0 = Release|Any CPU
 		{E1ED5409-2787-4DDA-B1EB-CDCDD8434836}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E1ED5409-2787-4DDA-B1EB-CDCDD8434836}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E1ED5409-2787-4DDA-B1EB-CDCDD8434836}.Release|Any CPU.ActiveCfg = Release|Any CPU
