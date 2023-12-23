@@ -8,10 +8,10 @@ public class GradientDescentData {
 	
 	public required GradientDescentParameters Parameters { get; init; }
 
-	public required List<Point3> Points { get; init; }
+	public List<Point3> Points { get; set; } = new();
 
-	public required List<Vector3> Gradients { get; init; }
+	public List<Vector3> Gradients { get; set; } = new();
 
-	public required List<Vector3> Steps { get; init; }
+	public List<Vector3> Steps { get; set; } = new();
 
 }
