@@ -1,4 +1,5 @@
-﻿using LinearAlgebra;
+﻿using System.Linq;
+using LinearAlgebra;
 
 namespace LidarObjectDetection;
 
