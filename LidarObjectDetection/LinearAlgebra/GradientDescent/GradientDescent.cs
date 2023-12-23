@@ -6,13 +6,28 @@ namespace LinearAlgebra.GradientDescent;
 
 public static class GradientDescent {
 
-	public static Vector3 Descent(Func<Point3, double> function, Point3 startingPoint, GradientDescentParameters parameters) {
+	public static Point3? Descent(Func<Point3, double> function, Point3 startingPoint, GradientDescentParameters parameters) {
 
-		Vector3 gradient = parameters.InitialGradientApproximation(function, startingPoint, parameters.ApproximationDeltaSize);
+		Point3 previousPoint = startingPoint;
+		Vector3 previousGradient = parameters.InitialGradientApproximation(function, startingPoint, parameters.ApproximationDeltaSize);
 
-		Vector3 step = parameters.StepSizeCalculator(gradient);
+		while (true) {
 
-		throw new NotImplementedException();
+			Vector3 gradient = parameters.GradientApproximation(function, startingPoint, previousGradient, parameters.ApproximationDeltaSize);
+			Vector3 step = parameters.StepSizeCalculator(gradient);
+			Point3 point = previousPoint.Translate(step);
+
+			previousPoint = point;
+			previousGradient = gradient;
+
+			if (parameters.ConvergenceCriteria()) {
+				return point;
+			}
+
+			if (parameters.FailureCriteria()) {
+				return null;
+			}
+		}
 	}
 
 }

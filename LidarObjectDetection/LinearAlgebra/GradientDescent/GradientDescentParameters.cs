@@ -12,4 +12,14 @@ public class GradientDescentParameters {
 
 	public required StepSizeCalculator StepSizeCalculator {get; init; }
 
+	public required ConvergenceCriteria ConvergenceCriteria { get; init; }
+
+	public required FailureCriteria FailureCriteria { get; set; }
+
 }
+
+
+
+public delegate bool ConvergenceCriteria();
+
+public delegate bool FailureCriteria();

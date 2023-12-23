@@ -43,7 +43,3 @@ public class DetectionParameters {
 }
 
 public delegate Point3[] StartingPointDistributor(int startingPointCount, RectangularRegion searchRegion);
-
-
-
-public delegate bool ConvergenceCriteria();
