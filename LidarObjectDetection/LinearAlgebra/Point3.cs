@@ -37,6 +37,15 @@ public readonly struct Point3 {
 		return new() { X = X + translation.X, Y = Y + translation.Y, Z = Z + translation.Z };
 	}
 
+	public double DistanceFrom(Point3 otherPoint) {
+
+		double deltaX = X - otherPoint.X;
+		double deltaY = Y - otherPoint.Y;
+		double deltaZ = Z - otherPoint.Z;
+
+		return double.Sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ);
+	}
+
 
 
 	public override string ToString() {
