@@ -1,4 +1,6 @@
-﻿namespace LinearAlgebra.GradientDescent; 
+﻿using static System.Double;
+
+namespace LinearAlgebra.GradientDescent; 
 
 
 
@@ -22,9 +24,9 @@ public class ConsecutiveSmallGradientAndPointChange() : IConvergenceDecider {
 
 
 
-	private int ConsecutiveSmallIterations = 0;
+	private int ConsecutiveSmallIterations;
 
-	private Point3 PreviousPoint = default;
+	private Point3 PreviousPoint = new() { X = MaxValue, Y = MaxValue, Z = MaxValue};
 
 
 
