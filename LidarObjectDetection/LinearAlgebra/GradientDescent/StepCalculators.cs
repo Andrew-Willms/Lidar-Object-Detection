@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace LinearAlgebra.GradientDescent;
+﻿namespace LinearAlgebra.GradientDescent;
 
 
 
@@ -14,6 +12,14 @@ public delegate Vector3 StepCalculator(Vector3 previousStep, Vector3 previousGra
 
 public static class StepCalculators {
 
-	// todo add a step counter with "inertia"
+	public static Vector3 ConstantStep(Vector3 gradient, double constantSize) {
+
+		return gradient.GetUnitVector() * constantSize;
+	}
+
+	public static Vector3 ScaleGradient(Vector3 gradient, double scalingFactor) {
+
+		return gradient * scalingFactor;
+	}
 
 }
