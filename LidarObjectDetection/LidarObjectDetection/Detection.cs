@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using LinearAlgebra;
 using LinearAlgebra.GradientDescent;
@@ -13,7 +14,7 @@ public static class Detection {
 
 
 
-
+		Func<Point3, double> errorFunction = null!;
 
 
 		Point3[] startingPoints = parameters.StartingPointDistributor(parameters.StartingPointCount, parameters.SearchRegion);
@@ -23,7 +24,7 @@ public static class Detection {
 		foreach (Point3 startingPoint in startingPoints) {
 
 #if DEBUG
-			Point3? result = GradientDescent.Descent(parameters.GradientDescentParameters, out GradientDescentData data);
+			Point3? result = GradientDescent.Descent(errorFunction, startingPoint, parameters.GradientDescentParameters, out GradientDescentData data);
 #else
 			Point3? result = GradientDescent.Descent(parameters.GradientDescentParameters);
 #endif
@@ -32,7 +33,7 @@ public static class Detection {
 			}
 		}
 
-		return localMinima.OrderBy(parameters.GradientDescentParameters.Function).FirstOrDefault();
+		return localMinima.OrderBy(errorFunction).FirstOrDefault();
 	}
 
 }
