@@ -11,6 +11,11 @@ public static class Detection {
 
 	public static Point3? Detect(Point2[] lidarPoints, Polygon crossSection, DetectionParameters parameters) {
 
+
+
+
+
+
 		Point3[] startingPoints = parameters.StartingPointDistributor(parameters.StartingPointCount, parameters.SearchRegion);
 
 		List<Point3> localMinima = new();

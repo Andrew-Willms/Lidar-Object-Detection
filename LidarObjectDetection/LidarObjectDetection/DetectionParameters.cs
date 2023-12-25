@@ -7,6 +7,10 @@ namespace LidarObjectDetection;
 
 public class DetectionParameters {
 
+
+
+
+
 	public required int StartingPointCount { get; init; }
 
 	public required RectangularRegion SearchRegion { get; init; }
