@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using LinearAlgebra;
 
 namespace LidarObjectDetection; 
@@ -19,14 +20,18 @@ public class World {
 		_Objects.Add(polygon);
 	}
 
-	public Point3[] GetLidarPoints() {
+	public Point2[] GetLidarPoints() {
 
 		throw new NotImplementedException();
 	}
 
-	public Point3[] GetLidarPointsWorldSpace() {
+	public Point2[] GetLidarPointsWorldSpace() {
 
-		throw new NotImplementedException();
+		double lidarAngle = Lidar.ForwardsDirection.AngleTo();
+
+		return GetLidarPoints()
+			.Select(point => point.Rotate(lidarAngle, Lidar.Center))
+			.ToArray();
 	}
 
 	public LineSegment[] GetLidarBeamsInWorldSpace() {
