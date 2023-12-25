@@ -5,6 +5,7 @@ using Microsoft.Maui.Hosting;
 namespace Gui;
 
 
+
 public static class MauiProgram {
 
 	public static MauiApp CreateMauiApp() {
