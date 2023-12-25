@@ -1,8 +1,14 @@
-﻿namespace LinearAlgebra.GradientDescent;
+﻿using System;
+
+namespace LinearAlgebra.GradientDescent;
 
 
 
 public class GradientDescentParameters {
+
+	public required Func<Point3, double> Function { get; set; }
+
+	public required Point3 StartingPoint { get; set; }
 
 	public required InitialGradientApproximation InitialGradientApproximation { get; init; }
 

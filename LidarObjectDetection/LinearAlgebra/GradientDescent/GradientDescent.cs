@@ -1,20 +1,19 @@
-﻿using System;
-
-namespace LinearAlgebra.GradientDescent; 
+﻿namespace LinearAlgebra.GradientDescent; 
 
 
 
 public static class GradientDescent {
 
-	public static Point3? Descent(Func<Point3, double> function, Point3 startingPoint, GradientDescentParameters parameters
-#if DEBUG
-		, out GradientDescentData data
-#endif
-		) {
 
-		Vector3 previousGradient = parameters.InitialGradientApproximation(function, startingPoint);
+#if DEBUG
+	public static Point3? Descent(GradientDescentParameters parameters, out GradientDescentData data) {
+#else
+	public static Point3? Descent(GradientDescentParameters parameters) {
+#endif
+
+		Vector3 previousGradient = parameters.InitialGradientApproximation(parameters.Function, parameters.StartingPoint);
 		Vector3 step = parameters.InitialStepCalculator(previousGradient);
-		Point3 previousPoint = startingPoint.Translate(step);
+		Point3 previousPoint = parameters.StartingPoint.Translate(step);
 
 #if DEBUG
 		data = new() { Parameters = parameters };
@@ -25,7 +24,7 @@ public static class GradientDescent {
 
 		while (true) {
 
-			Vector3 gradient = parameters.GradientApproximation(function, startingPoint, step);
+			Vector3 gradient = parameters.GradientApproximation(parameters.Function, parameters.StartingPoint, step);
 			step = parameters.StepCalculator(step, previousGradient, gradient);
 			Point3 point = previousPoint.Translate(step);
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using System.Collections.Generic;
+using System.Linq;
 using LinearAlgebra;
 using LinearAlgebra.GradientDescent;
 
@@ -8,41 +9,25 @@ namespace LidarObjectDetection;
 
 public static class Detection {
 
-	public static Point3 Detect(Point2[] lidarPoints, Polygon crossSection, DetectionParameters parameters) {
+	public static Point3? Detect(Point2[] lidarPoints, Polygon crossSection, DetectionParameters parameters) {
 
-		throw new NotImplementedException();
+		Point3[] startingPoints = parameters.StartingPointDistributor(parameters.StartingPointCount, parameters.SearchRegion);
+
+		List<Point3> localMinima = new();
+
+		foreach (Point3 startingPoint in startingPoints) {
+
+#if DEBUG
+			Point3? result = GradientDescent.Descent(parameters.GradientDescentParameters, out GradientDescentData data);
+#else
+			Point3? result = GradientDescent.Descent(parameters.GradientDescentParameters);
+#endif
+			if (result is not null) {
+				localMinima.Add((Point3)result);
+			}
+		}
+
+		return localMinima.OrderBy(parameters.GradientDescentParameters.Function).FirstOrDefault();
 	}
 
 }
-
-
-
-public class DetectionParameters {
-
-	public required int StartingPointCount { get; init; }
-
-	public required RectangularRegion SearchRegion { get; init; }
-
-	public required StartingPointDistributor StartingPointDistributor { get; init; }
-
-
-
-	public required GradientDescentParameters GradientDescentParameters { get; init; }
-
-
-
-	public required LeastDistanceCalculatorCreator LeastDistanceCalculatorCreator { get; init; }
-
-	public required CumulativeErrorFunction CumulativeErrorFunction { get; init; }
-
-
-
-	public required Point3 PreviousPosition { get; init; }
-
-	public required Point3 RobotVelocity { get; init; }
-
-}
-
-
-
-public delegate Point3[] StartingPointDistributor(int startingPointCount, RectangularRegion searchRegion);
