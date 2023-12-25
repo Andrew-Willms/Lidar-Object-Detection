@@ -139,6 +139,20 @@ public class LineSegment {
 
 	// todo adding comparison operators would be nice at some point
 
+
+
+	public LineSegment RotateAround(Point2 point, double rotation) {
+		throw new NotImplementedException();
+	}
+
+	public LineSegment Translate(Vector2 vector) {
+
+		return new() {
+			Start = new() { X = Start.X + vector.X, Y = Start.Y + vector.Y },
+			End = new() { X = End.X + vector.X, Y = End.Y + vector.Y }
+		};
+	}
+
 }
 
 
