@@ -51,6 +51,17 @@ public readonly struct Point2 {
 		};
 	}
 
+	public Point2 Rotate(double angle, Point2 centerPoint) {
+
+		Vector2 centerOffset = new(centerPoint, new(0, 0));
+
+		Point2 pointCentered = Translate(centerOffset);
+
+		Point2 pointRotated = pointCentered.Rotate(angle);
+
+		return pointRotated.Translate(-centerOffset);
+	}
+
 	public double DistanceFrom(Point2 otherPoint) {
 
 		double deltaX = X - otherPoint.X;
