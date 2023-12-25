@@ -37,6 +37,20 @@ public readonly struct Point2 {
 		return new() { X = X + translation.X, Y = Y + translation.Y };
 	}
 
+	public Point2 Rotate(double angle) {
+
+		// todo would be nice to properly implement matrix math
+		// this is just applying a rotation matrix
+
+		double cosTheta = Math.Cos(angle * Math.PI / 180);
+		double sinTheta = Math.Sin(angle * Math.PI / 180);
+
+		return new() {
+			X = cosTheta * X - sinTheta * Y,
+			Y = sinTheta * X + cosTheta * Y
+		};
+	}
+
 	public double DistanceFrom(Point2 otherPoint) {
 
 		double deltaX = X - otherPoint.X;
