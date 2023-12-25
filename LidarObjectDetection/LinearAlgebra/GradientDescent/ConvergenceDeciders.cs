@@ -12,7 +12,7 @@ public interface IConvergenceDecider {
 
 
 
-public class ConsecutiveSmallGradientAndPointChange() : IConvergenceDecider {
+public class ConsecutiveSmallGradientAndPointChange : IConvergenceDecider {
 
 	public required int ConsecutiveSmallIterationsRequired { get; set; }
 
