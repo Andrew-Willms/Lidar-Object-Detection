@@ -117,6 +117,20 @@ public readonly struct Vector2 {
 
 
 
+	public double DotProduct(Vector2 otherVector) {
+
+		return X * otherVector.X + Y * otherVector.Y;
+	}
+
+	public double AngleTo(Vector2 otherVector) {
+
+		double angle = Math.Atan2(Y, X);
+		double otherAngle = Math.Atan2(otherVector.Y, otherVector.X);
+
+		return otherAngle - angle;
+	}
+
+
 	public static bool operator ==(Vector2 left, Vector2 right) {
 		return Math.Abs(left.X - right.X) < Point2.ComparisonTolerance && Math.Abs(left.Y - right.Y) < Point2.ComparisonTolerance;
 	}
@@ -149,6 +163,9 @@ public readonly struct Vector2 {
 		return left + -1 * right;
 	}
 
+	public static Vector2 operator -(Vector2 vector) {
+		return new(-vector.X, -vector.Y);
+	}
 
 
 	public override string ToString() {
