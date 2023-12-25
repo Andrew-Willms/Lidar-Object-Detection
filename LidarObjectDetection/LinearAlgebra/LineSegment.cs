@@ -141,8 +141,12 @@ public class LineSegment {
 
 
 
-	public LineSegment RotateAround(Point2 point, double rotation) {
-		throw new NotImplementedException();
+	public LineSegment RotateAround(double rotation, Point2 centerPoint) {
+
+		return new() {
+			Start = Start.Rotate(rotation, centerPoint),
+			End = End.Rotate(rotation, centerPoint)
+		};
 	}
 
 	public LineSegment Translate(Vector2 vector) {
