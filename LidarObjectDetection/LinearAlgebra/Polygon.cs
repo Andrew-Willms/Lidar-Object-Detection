@@ -1,51 +1,112 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Linq;
+using LinqUtilities;
 
 namespace LinearAlgebra;
 
 
 
-public class Polygon {
+public readonly struct Polygon : IEquatable<Polygon> {
 
-	//public required ReadOnlyArray<Point2> Points { get; init; }
+	public ImmutableArray<Point2> Points { get; }
 
-	//public ReadOnlyArray<LineSegment> Edges { get; }
+	public ImmutableArray<LineSegment> Edges { get; }
 
-	//private Polygon(ReadOnlyArray<LineSegment> edges) {
-	//	Edges = edges;
-	//}
 
-	//public static Polygon? Create(IEnumerable<Point2> points) {
 
-	//	Point2[] array = points as Point2[] ?? points.ToArray();
+	public Polygon() {
+		throw new InvalidOperationException("Use a parametered constructor.");
+	}
 
-	//	// if any adjacent points are identical
-	//	if (array.Where((element, i) => element == array[(i + 1) % array.Length]).Any()) {
-	//		return null;
-	//	}
+	public Polygon(ImmutableArray<LineSegment> edges) {
 
-	//	ReadOnlyArray<LineSegment> edges = array
-	//		.Select((t, i) => LineSegment.Create(t, array[(i + 1) % array.Length]) ?? throw new UnreachableException())
-	//		.ToReadOnly();
+		if (edges.Length < 3) {
+			throw new InvalidOperationException("Polygons must have at least three vertexes.");
+		}
 
-	//	return new(edges) { Points = array.ToReadOnly() };
-	//}
+		Edges = edges;
+		Points = edges
+			.Select(lineSegment => lineSegment.Start)
+			.ToImmutableArray();
+	}
 
-	//public PolygonIntersection Intersection(LineSegment lineSegment) {
+	public Polygon(ImmutableArray<Point2> points) {
 
-	//	return Edges.Select(x => x.Intersection(lineSegment)).WhereHasValue().ToArray();
-	//}
+		if (points.Length < 3) {
+			throw new InvalidOperationException("Polygons must have at least three vertexes.");
+		}
 
-	//public Point2[] NearestIntersection(LineSegment lineSegment, Point2 point) {
-	//	LineSegmentIntersection[] intersections = Intersection(lineSegment).AsT0;
-	//	foreach (LineSegmentIntersection intersection in intersections) {
-	//		intersection.Match(
-	//			point => point,
-	//			lineSegment => {
-	//				return new Vector2()
-	//			}
-	//		);
-	//	}
-	//}
+		// if any adjacent points are identical
+		if (points.AdjacentPairsWrapped().Any(x => x.first == x.second)) {
+			throw new InvalidOperationException();
+		}
+
+		ImmutableArray<LineSegment> edges = points
+			.AdjacentPairsWrapped()
+			.Select(x => new LineSegment { Start = x.first, End = x.second })
+			.ToImmutableArray();
+
+		Edges = edges;
+		Points = points;
+	}
+
+
+
+	public PolygonIntersection Intersection(LineSegment lineSegment) {
+
+		return Edges.Select(x => x.Intersection(lineSegment)).Where(x => x is not null).ToArray();
+	}
+
+	public Point2 NearestIntersection(LineSegment lineSegment, Point2 point) {
+
+		return Intersection(lineSegment).AsT0
+			.SelectMany(intersection => intersection.Match<IEnumerable<Point2>>(
+				pointIntersection => new[] { pointIntersection },
+				lineIntersection => new[] { lineIntersection.Start, lineIntersection.End })
+			)
+			.MinBy(point.DistanceFrom);
+	}
+
+
+
+	public Polygon Rotated(double angle) {
+
+		return new(Edges
+			.Select(lineSegment => lineSegment.RotateAround(angle, Point2.Origin))
+			.ToImmutableArray()
+		);
+	}
+
+	public Polygon Translated(Vector2 offset) {
+
+		return new(Edges
+			.Select(lineSegment => lineSegment.Translate(offset))
+			.ToImmutableArray()
+		);
+	}
+
+
+
+	public static bool operator ==(Polygon left, Polygon right) {
+		return left.Equals(right);
+	}
+
+	public static bool operator !=(Polygon left, Polygon right) {
+		return !(left == right);
+	}
+
+	public bool Equals(Polygon other) {
+		return Points.Equals(other.Points);
+	}
+
+	public override bool Equals(object? obj) {
+		return obj is Polygon other && Equals(other);
+	}
+
+	public override int GetHashCode() {
+		return HashCode.Combine(Points, Edges);
+	}
 
 }

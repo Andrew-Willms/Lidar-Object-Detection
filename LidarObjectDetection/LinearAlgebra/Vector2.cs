@@ -6,7 +6,7 @@ namespace LinearAlgebra;
 
 
 
-public readonly struct Vector2 {
+public readonly struct Vector2 : IEquatable<Vector2> {
 
 	public required double X { get; init; }
 
@@ -39,6 +39,28 @@ public readonly struct Vector2 {
 	public static readonly Vector2 Zero = new() { X = 0, Y = 0 };
 
 
+
+	public Vector2 GetUnitVector() {
+
+		if (this == Zero) {
+			throw new ArgumentException();
+		}
+
+		return new() { X = X / Magnitude, Y = Y / Magnitude };
+	}
+
+	public double DotProduct(Vector2 otherVector) {
+
+		return X * otherVector.X + Y * otherVector.Y;
+	}
+
+	public double AngleTo(Vector2 otherVector) {
+
+		double angle = Math.Atan2(Y, X);
+		double otherAngle = Math.Atan2(otherVector.Y, otherVector.X);
+
+		return otherAngle - angle;
+	}
 
 	public bool SameDirectionAs(Vector2 other) {
 
@@ -84,15 +106,6 @@ public readonly struct Vector2 {
 		return others.All(OppositeDirectionAs);
 	}
 
-	public Vector2 GetUnitVector() {
-
-		if (this == Zero) {
-			throw new ArgumentException();
-		}
-
-		return new() { X = X / Magnitude, Y = Y / Magnitude };
-	}
-
 	public Vector2 GetClockwisePerpendicularVector() {
 		return new() { X = Y, Y = -X };
 	}
@@ -117,22 +130,9 @@ public readonly struct Vector2 {
 
 
 
-	public double DotProduct(Vector2 otherVector) {
-
-		return X * otherVector.X + Y * otherVector.Y;
-	}
-
-	public double AngleTo(Vector2 otherVector) {
-
-		double angle = Math.Atan2(Y, X);
-		double otherAngle = Math.Atan2(otherVector.Y, otherVector.X);
-
-		return otherAngle - angle;
-	}
-
 
 	public static bool operator ==(Vector2 left, Vector2 right) {
-		return Math.Abs(left.X - right.X) < Point2.ComparisonTolerance && Math.Abs(left.Y - right.Y) < Point2.ComparisonTolerance;
+		return left.Equals(right);
 	}
 
 	public static bool operator !=(Vector2 left, Vector2 right) {
@@ -166,6 +166,21 @@ public readonly struct Vector2 {
 	public static Vector2 operator -(Vector2 vector) {
 		return new(-vector.X, -vector.Y);
 	}
+
+	public bool Equals(Vector2 other) {
+
+		return Math.Abs(X - other.X) < Constants.ComparisonTolerance &&
+		       Math.Abs(Y - other.Y) < Constants.ComparisonTolerance;
+	}
+
+	public override bool Equals(object? obj) {
+		return obj is Vector2 other && Equals(other);
+	}
+
+	public override int GetHashCode() {
+		return HashCode.Combine(X, Y);
+	}
+
 
 
 	public override string ToString() {

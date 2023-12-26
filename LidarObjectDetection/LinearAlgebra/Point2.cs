@@ -5,14 +5,12 @@ namespace LinearAlgebra;
 
 
 
-public readonly struct Point2 {
+public readonly struct Point2 : IEquatable<Point2> {
 
 	public required double X { get; init; }
 
 	public required double Y { get; init; }
 
-
-	public const double ComparisonTolerance = 10e-6;
 
 
 	[SetsRequiredMembers]
@@ -21,23 +19,15 @@ public readonly struct Point2 {
 		Y = y;
 	}
 
+	public static readonly Point2 Origin = new() { X = 0, Y = 0 };
 
 
-	public static bool operator ==(Point2 left, Point2 right) {
 
-		return Math.Abs(left.X - right.X) < ComparisonTolerance && Math.Abs(left.Y - right.Y) < ComparisonTolerance;
-	}
-
-	public static bool operator !=(Point2 left, Point2 right) {
-
-		return !(left == right);
-	}
-
-	public Point2 Translate(Vector2 translation) {
+	public Point2 Translated(Vector2 translation) {
 		return new() { X = X + translation.X, Y = Y + translation.Y };
 	}
 
-	public Point2 Rotate(double angle) {
+	public Point2 Rotated(double angle) {
 
 		// todo would be nice to properly implement matrix math
 		// this is just applying a rotation matrix
@@ -51,15 +41,15 @@ public readonly struct Point2 {
 		};
 	}
 
-	public Point2 Rotate(double angle, Point2 centerPoint) {
+	public Point2 Rotated(double angle, Point2 centerPoint) {
 
 		Vector2 centerOffset = new(centerPoint, new(0, 0));
 
-		Point2 pointCentered = Translate(centerOffset);
+		Point2 pointCentered = Translated(centerOffset);
 
-		Point2 pointRotated = pointCentered.Rotate(angle);
+		Point2 pointRotated = pointCentered.Rotated(angle);
 
-		return pointRotated.Translate(-centerOffset);
+		return pointRotated.Translated(-centerOffset);
 	}
 
 	public double DistanceFrom(Point2 otherPoint) {
@@ -68,6 +58,30 @@ public readonly struct Point2 {
 		double deltaY = Y - otherPoint.Y;
 
 		return double.Sqrt(deltaX * deltaX + deltaY * deltaY);
+	}
+
+
+
+	public static bool operator ==(Point2 left, Point2 right) {
+		return left.Equals(right);
+	}
+
+	public static bool operator !=(Point2 left, Point2 right) {
+		return !(left == right);
+	}
+
+	public bool Equals(Point2 other) {
+
+		return Math.Abs(X - other.X) < Constants.ComparisonTolerance &&
+		       Math.Abs(Y - other.Y) < Constants.ComparisonTolerance;
+	}
+
+	public override bool Equals(object? obj) {
+		return obj is Point2 other && Equals(other);
+	}
+
+	public override int GetHashCode() {
+		return HashCode.Combine(X, Y);
 	}
 
 

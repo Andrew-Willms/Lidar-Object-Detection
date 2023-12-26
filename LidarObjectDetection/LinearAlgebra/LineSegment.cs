@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using OneOf;
 
 namespace LinearAlgebra;
@@ -8,33 +9,46 @@ namespace LinearAlgebra;
 /// <summary>
 /// Line Segment in 2D
 /// </summary>
-public class LineSegment {
+public readonly struct LineSegment {
 
 	public required Point2 Start { get; init; }
 
 	public required Point2 End { get; init; }
 
-	public Vector2 UnitDirectionVector2 => new Vector2(Start, End).GetUnitVector();
+	public Vector2 UnitDirectionVector => new Vector2(Start, End).GetUnitVector();
 
 
 
-	private LineSegment() { }
+	public LineSegment() {
 
-	// todo determine how I want to do errors
-	public static LineSegment? Create(Point2 start, Point2 end) {
-
-		return start == end
-			? null
-			: new LineSegment { Start = start, End = end };
+		if (Start == End) {
+			throw new InvalidOperationException("You cannot create a line segment of zero length");
+		}
 	}
 
-	public static LineSegment? Create(Point2 start, Vector2 displacement) {
+	[SetsRequiredMembers]
+	public LineSegment(Point2 start, Point2 end) {
 
-		return displacement == Vector2.Zero
-			? null
-			: new LineSegment { Start = start, End = new() { X = start.X + displacement.X, Y = start.Y + displacement.Y } };
+		Start = start; 
+		End = end;
+
+		if (Start == End) {
+			throw new InvalidOperationException("You cannot create a line segment of zero length");
+		}
 	}
 
+	[SetsRequiredMembers]
+	public LineSegment(Point2 start, Vector2 displacement) {
+
+		Start = start;
+		End = new() { X = start.X + displacement.X, Y = start.Y + displacement.Y };
+
+		if (Start == End) {
+			throw new InvalidOperationException("You cannot create a line segment of zero length");
+		}
+	}
+
+	
 
 
 	public bool Intersects(LineSegment other) {
@@ -66,7 +80,7 @@ public class LineSegment {
 			}
 
 			// if only one point overlaps
-			if (Math.Abs(parameterAtStartOfOverlap - parameterAtEndOfOverlap) < Point2.ComparisonTolerance) {
+			if (Math.Abs(parameterAtStartOfOverlap - parameterAtEndOfOverlap) < Constants.ComparisonTolerance) {
 				return (LineSegmentIntersection)PointAtParameterization(parameterAtStartOfOverlap);
 			}
 
@@ -115,7 +129,7 @@ public class LineSegment {
 		}
 
 		Vector2 startToPoint = new(Start, point);
-		bool positiveParameter = UnitDirectionVector2.SameDirectionAs(startToPoint);
+		bool positiveParameter = UnitDirectionVector.SameDirectionAs(startToPoint);
 		double magnitude = startToPoint.Magnitude;
 
 		return positiveParameter switch {
@@ -126,7 +140,7 @@ public class LineSegment {
 
 	private Point2 PointAtParameterization(double parameter) {
 
-		return Start.Translate(UnitDirectionVector2 * parameter);
+		return Start.Translated(UnitDirectionVector * parameter);
 	}
 
 	public bool Collinear(LineSegment other) {
@@ -144,8 +158,8 @@ public class LineSegment {
 	public LineSegment RotateAround(double rotation, Point2 centerPoint) {
 
 		return new() {
-			Start = Start.Rotate(rotation, centerPoint),
-			End = End.Rotate(rotation, centerPoint)
+			Start = Start.Rotated(rotation, centerPoint),
+			End = End.Rotated(rotation, centerPoint)
 		};
 	}
 

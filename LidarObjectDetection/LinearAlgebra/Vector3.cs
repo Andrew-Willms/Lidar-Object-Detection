@@ -6,7 +6,7 @@ namespace LinearAlgebra;
 
 
 
-public readonly struct Vector3 {
+public readonly struct Vector3 : IEquatable<Vector3> {
 
 	public required double X { get; init; }
 
@@ -115,7 +115,8 @@ public readonly struct Vector3 {
 
 
 	public static bool operator ==(Vector3 left, Vector3 right) {
-		return left.X == right.X && left.Y == right.Y && left.Z == right.Z;
+
+		return left.Equals(right);
 	}
 
 	public static bool operator !=(Vector3 left, Vector3 right) {
@@ -144,6 +145,21 @@ public readonly struct Vector3 {
 
 	public static Vector3 operator -(Vector3 left, Vector3 right) {
 		return left + -1 * right;
+	}
+
+	public bool Equals(Vector3 other) {
+
+		return Math.Abs(X - other.X) < Constants.ComparisonTolerance &&
+		       Math.Abs(Y - other.Y) < Constants.ComparisonTolerance &&
+		       Math.Abs(X - other.Z) < Constants.ComparisonTolerance;
+	}
+
+	public override bool Equals(object? obj) {
+		return obj is Vector3 other && Equals(other);
+	}
+
+	public override int GetHashCode() {
+		return HashCode.Combine(X, Y, Z);
 	}
 
 

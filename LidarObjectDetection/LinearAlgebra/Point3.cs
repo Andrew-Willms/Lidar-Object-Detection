@@ -1,10 +1,11 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace LinearAlgebra;
 
 
 
-public readonly struct Point3 {
+public readonly struct Point3 : IEquatable<Point3> {
 
 	public required double X { get; init; }
 
@@ -21,19 +22,11 @@ public readonly struct Point3 {
 		Z = z;
 	}
 
+	public static readonly Point3 Origin = new() { X = 0, Y = 0, Z = 0 };
 
 
-	public static bool operator ==(Point3 left, Point3 right) {
 
-		return left.X == right.X && left.Y == right.Y && left.Z == right.Z;
-	}
-
-	public static bool operator !=(Point3 left, Point3 right) {
-
-		return !(left == right);
-	}
-
-	public Point3 Translate(Vector3 translation) {
+	public Point3 Translated(Vector3 translation) {
 		return new() { X = X + translation.X, Y = Y + translation.Y, Z = Z + translation.Z };
 	}
 
@@ -44,6 +37,32 @@ public readonly struct Point3 {
 		double deltaZ = Z - otherPoint.Z;
 
 		return double.Sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ);
+	}
+
+
+
+	public static bool operator ==(Point3 left, Point3 right) {
+		return left.Equals(right);
+	}
+
+	public static bool operator !=(Point3 left, Point3 right) {
+
+		return !(left == right);
+	}
+
+	public bool Equals(Point3 other) {
+
+		return Math.Abs(X - other.X) < Constants.ComparisonTolerance &&
+		       Math.Abs(Y - other.Y) < Constants.ComparisonTolerance &&
+		       Math.Abs(Z - other.Z) < Constants.ComparisonTolerance;
+	}
+
+	public override bool Equals(object? obj) {
+		return obj is Point3 other && Equals(other);
+	}
+
+	public override int GetHashCode() {
+		return HashCode.Combine(X, Y, Z);
 	}
 
 
