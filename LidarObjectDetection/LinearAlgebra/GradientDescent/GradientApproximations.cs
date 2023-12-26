@@ -16,9 +16,9 @@ public static class GradientApproximations {
 
 		double valueAtPoint = function(point);
 
-		double valueAtXOffset = function(point.Translate(new() { X = approximationDeltaSize.X, Y = 0, Z = 0 }));
-		double valueAtYOffset = function(point.Translate(new() { X = 0, Y = approximationDeltaSize.Y, Z = 0 }));
-		double valueAtZOffset = function(point.Translate(new() { X = 0, Y = 0, Z = approximationDeltaSize.Z }));
+		double valueAtXOffset = function(point.Translated(new() { X = approximationDeltaSize.X, Y = 0, Z = 0 }));
+		double valueAtYOffset = function(point.Translated(new() { X = 0, Y = approximationDeltaSize.Y, Z = 0 }));
+		double valueAtZOffset = function(point.Translated(new() { X = 0, Y = 0, Z = approximationDeltaSize.Z }));
 
 		double xPartial = (valueAtXOffset - valueAtPoint) / approximationDeltaSize.X;
 		double yPartial = (valueAtYOffset - valueAtPoint) / approximationDeltaSize.Y;

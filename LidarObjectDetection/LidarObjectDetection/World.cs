@@ -30,7 +30,7 @@ public class World {
 		double lidarAngle = Lidar.ForwardsDirection.AngleTo();
 
 		return GetLidarPoints()
-			.Select(point => point.Rotate(lidarAngle, Lidar.Center))
+			.Select(point => point.Rotated(lidarAngle, Lidar.Center))
 			.ToArray();
 	}
 
