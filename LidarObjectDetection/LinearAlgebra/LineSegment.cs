@@ -171,6 +171,8 @@ public readonly struct LineSegment {
 		};
 	}
 
+	// todo add comparison functions and operators
+
 }
 
 
