@@ -14,7 +14,7 @@ public class World {
 
 	public LidarScanner Lidar { get; set; }
 
-	public Vector2 LidarScannerForwardsDirection { get; set; }
+	public Vector2 LidarDirection { get; set; }
 
 	public void AddObject(Polygon polygon) {
 		_Objects.Add(polygon);
@@ -25,9 +25,9 @@ public class World {
 		throw new NotImplementedException();
 	}
 
-	public Point2[] GetLidarPointsWorldSpace() {
+	public Point2[] GetLidarPointsInWorldSpace() {
 
-		double lidarAngle = Lidar.ForwardsDirection.AngleTo();
+		double lidarAngle = Lidar.ForwardsDirection.AngleTo(LidarDirection);
 
 		return GetLidarPoints()
 			.Select(point => point.Rotated(lidarAngle, Lidar.Center))
