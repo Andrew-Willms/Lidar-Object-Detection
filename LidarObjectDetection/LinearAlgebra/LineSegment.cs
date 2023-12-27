@@ -84,7 +84,10 @@ public readonly struct LineSegment {
 				return (LineSegmentIntersection)PointAtParameterization(parameterAtStartOfOverlap);
 			}
 
-			return (LineSegmentIntersection)Create(PointAtParameterization(parameterAtStartOfOverlap), PointAtParameterization(parameterAtEndOfOverlap));
+			return (LineSegmentIntersection) new LineSegment {
+				Start = PointAtParameterization(parameterAtStartOfOverlap),
+				End = PointAtParameterization(parameterAtEndOfOverlap)
+			};
 		}
 
 		// If both the the start and end points of other are on the positive side of the current line.
