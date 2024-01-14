@@ -9,4 +9,9 @@
 		<PublishAot>true</PublishAot>
 	</PropertyGroup>
 
+	<ItemGroup>
+	  <ProjectReference Include="..\LidarObjectDetection\LidarObjectDetection.csproj" />
+	  <ProjectReference Include="..\LinearAlgebra\LinearAlgebra.csproj" />
+	</ItemGroup>
+
 </Project>
