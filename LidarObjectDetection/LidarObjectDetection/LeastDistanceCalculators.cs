@@ -6,7 +6,7 @@ namespace LidarObjectDetection;
 
 
 
-public delegate ILeastDistanceCalculator LeastDistanceCalculatorCreator(Point2[] otherPoints);
+public delegate ILeastDistanceCalculator? LeastDistanceCalculatorCreator(Point2[] otherPoints);
 
 
 

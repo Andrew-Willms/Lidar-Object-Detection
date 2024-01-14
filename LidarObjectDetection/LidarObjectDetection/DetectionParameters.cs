@@ -31,6 +31,6 @@ public class DetectionParameters {
 
 	public required Point3 PreviousPosition { get; init; }
 
-	public required Point3 RobotVelocity { get; init; }
+	public required Vector3 RobotVelocity { get; init; }
 
 }

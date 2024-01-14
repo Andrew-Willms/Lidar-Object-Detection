@@ -1,4 +1,5 @@
-﻿using static System.Double;
+﻿using System;
+using static System.Double;
 
 namespace LinearAlgebra.GradientDescent; 
 
@@ -18,9 +19,7 @@ public class ConsecutiveSmallGradientAndPointChange : IConvergenceDecider {
 
 	public required double GradientThreshold { get; set; }
 
-	public required	double PointChangeThreshold { get; set; }
-
-	public required Vector3 PointComponentScalingFactor { get; set; }
+	public required Vector3 PointChangeThreshold { get; set; }
 
 
 
@@ -32,13 +31,11 @@ public class ConsecutiveSmallGradientAndPointChange : IConvergenceDecider {
 
 	public bool HasConverged(Point3 point, Vector3 gradient, Vector3 step) {
 
-		point = new() {
-			X = point.X * PointComponentScalingFactor.X,
-			Y = point.Y * PointComponentScalingFactor.Y,
-			Z = point.Z * PointComponentScalingFactor.Z
-		};
+		if (gradient.Magnitude < GradientThreshold
+		    && Math.Abs(point.X - PreviousPoint.X) > PointChangeThreshold.X
+		    && Math.Abs(point.Y - PreviousPoint.Y) > PointChangeThreshold.Y
+		    && Math.Abs(point.Z - PreviousPoint.Z) > PointChangeThreshold.Z) {
 
-		if (gradient.Magnitude < GradientThreshold && point.DistanceFrom(PreviousPoint) < PointChangeThreshold) {
 			ConsecutiveSmallIterations++;
 		}
 
