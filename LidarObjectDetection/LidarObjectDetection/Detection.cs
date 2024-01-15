@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
 using LinearAlgebra;
 using LinearAlgebra.GradientDescent;
@@ -11,7 +10,7 @@ namespace LidarObjectDetection;
 
 public static class Detection {
 
-	public static Point3? Detect(Point2[] lidarPoints, Polygon shapeToFind, DetectionParameters parameters) {
+	public static Point3? Detect(Point2[] lidarPoints, Polygon shapeToFind, LidarScanner lidar, DetectionParameters parameters) {
 
 		ILeastDistanceCalculator? leastDistanceCalculator = parameters.LeastDistanceCalculatorCreator(lidarPoints);
 		if (leastDistanceCalculator is null) {
@@ -27,9 +26,9 @@ public static class Detection {
 			World world = new();
 			world.AddObject(transformedShape);
 
-			Point2 theoreticalLidarPoints = lidarPoints
+			Point2[] theoreticalLidarPoints = lidar.ScanInLidarCoords(world, Vector2.Zero, 0);
 
-			double[] errors = null!;
+			double[] errors = theoreticalLidarPoints.Select(leastDistanceCalculator.DistanceTo).ToArray();
 
 			return parameters.CumulativeErrorFunction(errors);
 		};

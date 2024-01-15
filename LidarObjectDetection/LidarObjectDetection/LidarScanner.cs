@@ -13,14 +13,27 @@ public readonly struct LidarScanner {
 
 	public required LineSegment[] Beams { get; init; }
 
-	public Point2[] ScanWorld(World world, Vector2 offsetFromWorldCenter, double rotation) {
+	public Point2[] ScanInWorldCoord(World world, Vector2 lidarOffsetFromWorldCenter, double lidarRotation) {
 
 		Point2 center = Center;
 
 		return Beams
-			.Select(beam => beam.RotateAround(rotation, center))
-			.Select(beams => beams.Translate(offsetFromWorldCenter))
+			.Select(beam => beam.RotateAround(lidarRotation, center))
+			.Select(beams => beams.Translate(lidarOffsetFromWorldCenter))
 			.Select(beam => world.Objects
+				.Select(@object => @object.NearestIntersection(beam, beam.Start))
+				.MinBy(intersection => intersection.DistanceFrom(beam.Start)))
+			.ToArray();
+	}
+
+	public Point2[] ScanInLidarCoords(World world, Vector2 lidarOffsetFromWorldCenter, double lidarRotation) {
+
+		Point2 center = Center;
+
+		return Beams
+			.Select(beam => world.Objects
+				.Select(polygon => polygon.Translated(-lidarOffsetFromWorldCenter))
+				.Select(polygon => polygon.Rotated(-lidarRotation))
 				.Select(@object => @object.NearestIntersection(beam, beam.Start))
 				.MinBy(intersection => intersection.DistanceFrom(beam.Start)))
 			.ToArray();

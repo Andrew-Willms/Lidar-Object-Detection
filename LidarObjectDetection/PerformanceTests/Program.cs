@@ -6,7 +6,6 @@ using LinearAlgebra.GradientDescent;
 
 
 
-
 Point2[] squarePoints = { new(0, 0), new(1, 0), new(1, 1), new(0, 1) };
 Polygon square = new(squarePoints.ToImmutableArray());
 
@@ -17,7 +16,7 @@ LidarScanner lidarScanner = new() {
 	Beams = new[] { new LineSegment(new(0, 0), new Point2(0, 10)) }
 };
 
-Point2[] lidarPoints = lidarScanner.ScanWorld(world, new(2, 0), 0);
+Point2[] lidarPoints = lidarScanner.ScanInLidarCoords(world, new(2, 0), 0);
 
 
 
@@ -57,5 +56,5 @@ DetectionParameters detectionParameters = new() {
 	RobotVelocity = Vector3.Zero
 };
 
-Point3? position = Detection.Detect(lidarPoints, square, detectionParameters);
+Point3? position = Detection.Detect(lidarPoints, square, lidarScanner, detectionParameters);
 Console.WriteLine(position);
