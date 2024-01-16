@@ -20,6 +20,8 @@ public readonly struct Polygon : IEquatable<Polygon> {
 		throw new InvalidOperationException("Use a parametered constructor.");
 	}
 
+	public Polygon(params LineSegment[] edges) : this(edges.ToImmutableArray()) { }
+
 	public Polygon(ImmutableArray<LineSegment> edges) {
 
 		if (edges.Length < 3) {
@@ -31,6 +33,8 @@ public readonly struct Polygon : IEquatable<Polygon> {
 			.Select(lineSegment => lineSegment.Start)
 			.ToImmutableArray();
 	}
+
+	public Polygon(params Point2[] points) : this(points.ToImmutableArray()) { }
 
 	public Polygon(ImmutableArray<Point2> points) {
 

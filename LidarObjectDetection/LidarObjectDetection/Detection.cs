@@ -15,7 +15,7 @@ public static class Detection {
 #if DEBUG
 	public static (Point3?, List<GradientDescentData>) Detect(ImmutableArray<Point2> lidarPoints, Polygon shapeToFind, LidarScanner lidar, Vector2 lidarOffset, double lidarRotation, DetectionParameters parameters) {
 #else
-	public static Point3? Detect(ImmutableArray<Point2> lidarPoints, Polygon shapeToFind, LidarScanner lidar, DetectionParameters parameters) {
+	public static Point3? Detect(ImmutableArray<Point2> lidarPoints, Polygon shapeToFind, LidarScanner lidar, Vector2 lidarOffset, double lidarRotation, DetectionParameters parameters) {
 #endif
 
 		ILeastDistanceCalculator? leastDistanceCalculator = parameters.LeastDistanceCalculatorCreator(lidarPoints);
@@ -54,7 +54,7 @@ public static class Detection {
 			Point3? result = GradientDescent.Descent(errorFunction, startingPoint, parameters.GradientDescentParameters, out GradientDescentData data);
 			gradientDescentData.Add(data);
 #else
-			Point3? result = GradientDescent.Descent(parameters.GradientDescentParameters);
+			Point3? result = GradientDescent.Descent(errorFunction, startingPoint, parameters.GradientDescentParameters);
 #endif
 			if (result is not null) {
 				localMinima.Add((Point3)result);

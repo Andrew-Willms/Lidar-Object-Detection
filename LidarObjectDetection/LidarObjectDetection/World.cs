@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using LinearAlgebra;
 
 namespace LidarObjectDetection; 
@@ -7,13 +8,14 @@ namespace LidarObjectDetection;
 
 public readonly struct World {
 
-	private readonly List<Polygon> _Objects = new();
-	public IReadOnlyCollection<Polygon> Objects => _Objects;
+	public required ImmutableArray<Polygon> Objects { get; init; }
 
 	public World() { }
 
-	public void AddObject(Polygon polygon) {
-		_Objects.Add(polygon);
+	[SetsRequiredMembers]
+	public World(params Polygon[] objects) {
+		Objects = objects.ToImmutableArray();
+
 	}
 
 }
