@@ -10,7 +10,13 @@
 			Padding="30,0"
 			Spacing="25">
 
-			<GraphicsView Drawable="{Binding GraphicsManager, Mode=OneWay}"/>
+			<Border 
+				Stroke="AliceBlue"
+				StrokeThickness="3">
+
+				<GraphicsView Drawable="{Binding GraphicsManager, Mode=OneWay}"/>
+				
+			</Border>
 
 		</VerticalStackLayout>
 	</ScrollView>

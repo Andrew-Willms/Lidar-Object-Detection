@@ -25,7 +25,7 @@ public class TestCase {
 #if DEBUG
 	public (Point3? position, List<GradientDescentData> data) Execute() {
 
-		ImmutableArray<Point2> lidarPoints = Lidar.ScanInLidarCoords(World, LidarOffset, LidarRotation);
+		ImmutableArray<Point2> lidarPoints = GetLidarData();
 
 		return Detection.Detect(lidarPoints, ShapeToFind, Lidar, LidarOffset, LidarRotation, DetectionParameters);
 	}
@@ -37,5 +37,9 @@ public class TestCase {
 		return Detection.Detect(lidarPoints, ShapeToFind, Lidar, LidarOffset, LidarRotation, DetectionParameters);
 	}
 #endif
+
+	public ImmutableArray<Point2> GetLidarData() {
+		return Lidar.ScanInLidarCoords(World, LidarOffset, LidarRotation);
+	}
 
 }

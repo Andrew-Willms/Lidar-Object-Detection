@@ -7,21 +7,27 @@ namespace Gui;
 public partial class MainPage : ContentPage {
 
 	public GraphicsManager GraphicsManager { get; } = new() {
-		FieldTopRightCorner = default,
-		FieldBottomLeftCorner = default,
-		ShowLidarBeams = false,
-		ShowTheoreticalLidarPoints = false,
-		ShowShapeToFind = false,
-		ShowStartingPoints = false,
-		ShowStartingBoxBounds = false,
-		ShowFinalPosition = false,
-		StartingPointRoutesToShow = default
+		TestCase = TestCases.TestCases.TestCase1,
+		FieldTopLeftCorner = new(-5, 3),
+		FieldBottomRightCorner = new(5, -3),
+		ShowLidarBeams = true,
+		ShowRealLidarPoints = true,
+		ShowTheoreticalLidarPoints = true,
+		ShowShapeToFind = true,
+		ShowStartingPoints = true,
+		ShowStartingBoxBounds = true,
+		ShowFinalPosition = true,
+		ShowAllRoutes = true,
+		RoutesToShow = new()
 	};
 
 	public MainPage() {
 
 		BindingContext = this;
 		InitializeComponent();
+
+
+
 	}
 
 }
