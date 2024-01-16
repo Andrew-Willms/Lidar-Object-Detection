@@ -12,6 +12,7 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\LidarObjectDetection\LidarObjectDetection.csproj" />
 	  <ProjectReference Include="..\LinearAlgebra\LinearAlgebra.csproj" />
+	  <ProjectReference Include="..\TestCases\TestCases.csproj" />
 	</ItemGroup>
 
 </Project>

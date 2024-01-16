@@ -61,4 +61,11 @@
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <ProjectReference Include="..\LidarObjectDetection\LidarObjectDetection.csproj" />
+	  <ProjectReference Include="..\LinearAlgebra\LinearAlgebra.csproj" />
+	  <ProjectReference Include="..\LinqUtilities\LinqUtilities.csproj" />
+	  <ProjectReference Include="..\TestCases\TestCases.csproj" />
+	</ItemGroup>
+
 </Project>
