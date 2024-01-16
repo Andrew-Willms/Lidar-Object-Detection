@@ -18,6 +18,9 @@ public static class UiDetails {
 	public static readonly Color LidarDataColor = Colors.Green;
 	public const float LidarDataRadius = 3;
 
+	public static readonly Color GuessPositionColor = Colors.Blue;
+	public const float GuessPositionLineThickness = 13;
+
 }
 
 
@@ -36,39 +39,43 @@ public class GraphicsManager : IDrawable {
 	public required TestCase TestCase { get; init; }
 
 	public required Point2 FieldTopLeftCorner { get; init; }
-
 	public required Point2 FieldBottomRightCorner { get; init; }
 
 	public required bool ShowLidarBeams { get; init; }
-
 	public required bool ShowRealLidarPoints { get; init; }
-
 	public required bool ShowTheoreticalLidarPoints { get; init; }
 
 	public required bool ShowShapeToFind { get; init; }
-
 	public required bool ShowStartingPoints { get; init; }
-
 	public required bool ShowStartingBoxBounds { get; init; }
-
 	//public required bool ShowSearchBounds { get; init; }
 
 	public required bool ShowFinalPosition { get; init; }
 
 	public required bool ShowAllRoutes { get; init; }
-
 	public required ImmutableArray<int> RoutesToShow { get; init; }
+
+	public required bool ShowGuessPositions { get; init; }
+	public required bool ShowGradient { get; init; }
+	public required bool ShowStep { get; init; }
+
+
+
+	public GraphicsManager() {
+
+	}
 
 
 
 	public void Draw(ICanvas canvas, RectF dirtyRect) {
 
-		Vector2 fieldSpan = new(FieldTopLeftCorner, FieldBottomRightCorner);
-		FieldCanvas fieldCanvas = new((float)fieldSpan.X, (float)fieldSpan.Y, canvas, dirtyRect);
+		FieldCanvas fieldCanvas = new(FieldTopLeftCorner, FieldBottomRightCorner, canvas, dirtyRect);
 
 		if (ShowLidarBeams) {
 			DrawLidarBeams(fieldCanvas);
 		}
+
+		return;
 
 		if (ShowRealLidarPoints) {
 
@@ -111,8 +118,28 @@ public class GraphicsManager : IDrawable {
 
 	private void DrawRoutes(FieldCanvas fieldCanvas, List<GradientDescentData> routes) {
 
+		foreach (GradientDescentData gradientDescentData in routes) {
 
+			for (int index = 0; index < gradientDescentData.Points.Count; index++) {
 
+				if (ShowGuessPositions) {
+
+					Polygon shape = TestCase.ShapeToFind
+						.Rotated(gradientDescentData.Points[index].Z)
+						.Translated(new(gradientDescentData.Points[index].Z, gradientDescentData.Points[index].Y));
+
+					fieldCanvas.DrawPolygon(shape, UiDetails.GuessPositionColor, UiDetails.GuessPositionLineThickness);
+				}
+
+				if (ShowGradient) {
+					// todo
+				}
+
+				if (ShowStep) {
+					// todo
+				}
+			}
+		}
 	}
 
 }

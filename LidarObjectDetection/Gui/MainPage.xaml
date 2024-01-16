@@ -6,19 +6,24 @@
 			 x:DataType="gui:MainPage">
 
 	<ScrollView>
-		<VerticalStackLayout
-			Padding="30,0"
-			Spacing="25">
+		<Grid>
+
+			<Grid.RowDefinitions>
+				<RowDefinition Height="*"/>
+				<RowDefinition Height="auto"/>
+			</Grid.RowDefinitions>
 
 			<Border 
 				Stroke="AliceBlue"
 				StrokeThickness="3">
 
-				<GraphicsView Drawable="{Binding GraphicsManager, Mode=OneWay}"/>
-				
+				<GraphicsView 
+					x:Name="GraphicsView"
+					Drawable="{Binding GraphicsManager, Mode=OneWay}"/>
+
 			</Border>
 
-		</VerticalStackLayout>
+		</Grid>
 	</ScrollView>
 
 </ContentPage>
