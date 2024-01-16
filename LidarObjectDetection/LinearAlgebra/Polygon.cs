@@ -45,7 +45,7 @@ public readonly struct Polygon : IEquatable<Polygon> {
 
 		ImmutableArray<LineSegment> edges = points
 			.AdjacentPairsWrapped()
-			.Select(x => new LineSegment { Start = x.first, End = x.second })
+			.Select(pointPair => new LineSegment(pointPair.first, pointPair.second))
 			.ToImmutableArray();
 
 		Edges = edges;
@@ -59,9 +59,15 @@ public readonly struct Polygon : IEquatable<Polygon> {
 		return Edges.Select(x => x.Intersection(lineSegment)).Where(x => x is not null).ToArray();
 	}
 
-	public Point2 NearestIntersection(LineSegment lineSegment, Point2 point) {
+	public Point2? NearestIntersection(LineSegment lineSegment, Point2 point) {
 
-		return Intersection(lineSegment).AsT0
+		PolygonIntersection polygonIntersection = Intersection(lineSegment);
+
+		if (polygonIntersection.AsT0.Length == 0) {
+			return null;
+		}
+
+		return polygonIntersection.AsT0
 			.SelectMany(intersection => intersection.Match<IEnumerable<Point2>>(
 				pointIntersection => new[] { pointIntersection },
 				lineIntersection => new[] { lineIntersection.Start, lineIntersection.End })

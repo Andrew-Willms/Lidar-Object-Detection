@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using LinearAlgebra;
 using LinearAlgebra.GradientDescent;
+using LinqUtilities;
 
 namespace LidarObjectDetection;
 
@@ -10,11 +12,19 @@ namespace LidarObjectDetection;
 
 public static class Detection {
 
-	public static Point3? Detect(Point2[] lidarPoints, Polygon shapeToFind, LidarScanner lidar, DetectionParameters parameters) {
+#if DEBUG
+	public static (Point3?, List<GradientDescentData>) Detect(ImmutableArray<Point2> lidarPoints, Polygon shapeToFind, LidarScanner lidar, DetectionParameters parameters) {
+#else
+	public static Point3? Detect(ImmutableArray<Point2> lidarPoints, Polygon shapeToFind, LidarScanner lidar, DetectionParameters parameters) {
+#endif
 
 		ILeastDistanceCalculator? leastDistanceCalculator = parameters.LeastDistanceCalculatorCreator(lidarPoints);
 		if (leastDistanceCalculator is null) {
+#if DEBUG
+			return (null, new());
+#else
 			return null;
+#endif
 		}
 
 		Func<Point3, double> errorFunction = point => {
@@ -26,7 +36,7 @@ public static class Detection {
 			World world = new();
 			world.AddObject(transformedShape);
 
-			Point2[] theoreticalLidarPoints = lidar.ScanInLidarCoords(world, Vector2.Zero, 0);
+			ImmutableArray<Point2> theoreticalLidarPoints = lidar.ScanInLidarCoords(world, Vector2.Zero, 0);
 
 			double[] errors = theoreticalLidarPoints.Select(leastDistanceCalculator.DistanceTo).ToArray();
 
@@ -37,11 +47,12 @@ public static class Detection {
 		Point3[] startingPoints = parameters.StartingPointDistributor(parameters.StartingPointCount, parameters.SearchRegion);
 
 		List<Point3> localMinima = new();
+		List<GradientDescentData> gradientDescentData = new();
 
 		foreach (Point3 startingPoint in startingPoints) {
-
 #if DEBUG
 			Point3? result = GradientDescent.Descent(errorFunction, startingPoint, parameters.GradientDescentParameters, out GradientDescentData data);
+			gradientDescentData.Add(data);
 #else
 			Point3? result = GradientDescent.Descent(parameters.GradientDescentParameters);
 #endif
@@ -49,8 +60,11 @@ public static class Detection {
 				localMinima.Add((Point3)result);
 			}
 		}
-
-		return localMinima.MinBy(errorFunction);
+#if DEBUG
+		return (localMinima.MinByOrDefault(errorFunction), gradientDescentData);
+#else
+		return localMinima.MinByOrDefault(errorFunction);
+#endif
 	}
 
 }

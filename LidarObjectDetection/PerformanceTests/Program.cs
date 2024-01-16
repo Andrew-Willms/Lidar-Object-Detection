@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using LidarObjectDetection;
 using LinearAlgebra;
@@ -16,13 +17,13 @@ LidarScanner lidarScanner = new() {
 	Beams = new[] { new LineSegment(new(0, 0), new Point2(0, 10)) }
 };
 
-Point2[] lidarPoints = lidarScanner.ScanInLidarCoords(world, new(2, 0), 0);
+ImmutableArray<Point2> lidarPoints = lidarScanner.ScanInLidarCoords(world, new(2, 0), 0);
 
 
 
 DetectionParameters detectionParameters = new() {
 
-	StartingPointCount = 1,
+	StartingPointCount = 20,
 
 	SearchRegion = new() { CornerA = new(-5, 0, 0), CornerB = new(5, 5, 90) },
 
@@ -56,5 +57,7 @@ DetectionParameters detectionParameters = new() {
 	RobotVelocity = Vector3.Zero
 };
 
-Point3? position = Detection.Detect(lidarPoints, square, lidarScanner, detectionParameters);
+(Point3? position, List<GradientDescentData> data) = Detection.Detect(lidarPoints, square, lidarScanner, detectionParameters);
+
 Console.WriteLine(position);
+Console.WriteLine(data);

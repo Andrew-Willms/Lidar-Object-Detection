@@ -18,10 +18,19 @@ public static class LinqExtensions {
 
 		T[] array = enumerable as T[] ?? enumerable.ToArray();
 
-		for (int index = 0; index < array.Length - 1;) {
+		for (int index = 0; index < array.Length;) {
 
 			yield return (array[index], array[++index % array.Length]);
 		}
+	}
+
+	public static TSource? MinByOrDefault<TSource, TKey>(this IEnumerable<TSource> enumerable, Func<TSource, TKey> keySelector) {
+
+		TSource[] array = enumerable as TSource[] ?? enumerable.ToArray();
+
+		return array.Any()
+			? array.MinBy(keySelector) 
+			: default;
 	}
 
 }

@@ -1,5 +1,8 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Linq;
 using LinearAlgebra;
+using LinqUtilities;
 
 namespace LidarObjectDetection;
 
@@ -13,7 +16,7 @@ public readonly struct LidarScanner {
 
 	public required LineSegment[] Beams { get; init; }
 
-	public Point2[] ScanInWorldCoord(World world, Vector2 lidarOffsetFromWorldCenter, double lidarRotation) {
+	public ImmutableArray<Point2> ScanInWorldCoord(World world, Vector2 lidarOffsetFromWorldCenter, double lidarRotation) {
 
 		Point2 center = Center;
 
@@ -21,22 +24,24 @@ public readonly struct LidarScanner {
 			.Select(beam => beam.RotateAround(lidarRotation, center))
 			.Select(beams => beams.Translate(lidarOffsetFromWorldCenter))
 			.Select(beam => world.Objects
-				.Select(@object => @object.NearestIntersection(beam, beam.Start))
+				.Select(polygon => polygon.NearestIntersection(beam, beam.Start))
+				.Where(intersection => intersection is not null)
+				.Select(intersection => (Point2)intersection!)
 				.MinBy(intersection => intersection.DistanceFrom(beam.Start)))
-			.ToArray();
+			.ToImmutableArray();
 	}
 
-	public Point2[] ScanInLidarCoords(World world, Vector2 lidarOffsetFromWorldCenter, double lidarRotation) {
-
-		Point2 center = Center;
+	public ImmutableArray<Point2> ScanInLidarCoords(World world, Vector2 lidarOffsetFromWorldCenter, double lidarRotation) {
 
 		return Beams
 			.Select(beam => world.Objects
 				.Select(polygon => polygon.Translated(-lidarOffsetFromWorldCenter))
 				.Select(polygon => polygon.Rotated(-lidarRotation))
-				.Select(@object => @object.NearestIntersection(beam, beam.Start))
-				.MinBy(intersection => intersection.DistanceFrom(beam.Start)))
-			.ToArray();
+				.Select(polygon => polygon.NearestIntersection(beam, beam.Start))
+				.Where(intersection => intersection is not null)
+				.Select(intersection => (Point2)intersection!)
+				.MinByOrDefault(intersection => intersection.DistanceFrom(beam.Start)))
+			.ToImmutableArray();
 	}
 
 }

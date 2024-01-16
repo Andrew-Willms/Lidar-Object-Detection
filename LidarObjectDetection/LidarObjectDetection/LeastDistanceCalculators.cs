@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Immutable;
 using System.Linq;
 using LinearAlgebra;
 
@@ -6,7 +7,7 @@ namespace LidarObjectDetection;
 
 
 
-public delegate ILeastDistanceCalculator? LeastDistanceCalculatorCreator(Point2[] otherPoints);
+public delegate ILeastDistanceCalculator? LeastDistanceCalculatorCreator(ImmutableArray<Point2> otherPoints);
 
 
 
@@ -20,17 +21,17 @@ public interface ILeastDistanceCalculator {
 
 public readonly struct DumbLeastDistanceCalculator : ILeastDistanceCalculator {
 
-	private Point2[] OtherPoints { get; }
+	private ImmutableArray<Point2> OtherPoints { get; }
 
 	public DumbLeastDistanceCalculator() {
 		throw new InvalidOperationException("Use create function");
 	}
 
-	private DumbLeastDistanceCalculator(Point2[] otherPoints) {
+	private DumbLeastDistanceCalculator(ImmutableArray<Point2> otherPoints) {
 		OtherPoints = otherPoints;
 	}
 
-	public static DumbLeastDistanceCalculator? Create(Point2[] otherPoints) {
+	public static DumbLeastDistanceCalculator? Create(ImmutableArray<Point2> otherPoints) {
 
 		return otherPoints.Any() 
 			? new(otherPoints) 

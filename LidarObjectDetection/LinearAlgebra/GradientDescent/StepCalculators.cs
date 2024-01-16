@@ -14,6 +14,10 @@ public static class InitialStepCalculators {
 
 	public static Vector3 ConstantStep(Vector3 gradient, double constantSize) {
 
+		if (gradient == Vector3.Zero) {
+			return Vector3.Zero;
+		}
+
 		return gradient.GetUnitVector() * constantSize;
 	}
 
@@ -27,6 +31,10 @@ public static class InitialStepCalculators {
 public static class StepCalculators {
 
 	public static Vector3 ConstantStep(Vector3 previousStep, Vector3 previousGradient, Vector3 gradient, double constantSize) {
+
+		if (gradient == Vector3.Zero) {
+			return Vector3.Zero;
+		}
 
 		return gradient.GetUnitVector() * constantSize;
 	}

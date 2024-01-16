@@ -11,25 +11,21 @@ namespace LinearAlgebra;
 /// </summary>
 public readonly struct LineSegment {
 
-	public required Point2 Start { get; init; }
+	public Point2 Start { get; }
 
-	public required Point2 End { get; init; }
+	public Point2 End { get; }
 
 	public Vector2 UnitDirectionVector => new Vector2(Start, End).GetUnitVector();
 
 
 
 	public LineSegment() {
-
-		if (Start == End) {
-			throw new InvalidOperationException("You cannot create a line segment of zero length");
-		}
+		throw new NotSupportedException("don't use the empty constructor");
 	}
 
-	[SetsRequiredMembers]
 	public LineSegment(Point2 start, Point2 end) {
 
-		Start = start; 
+		Start = start;
 		End = end;
 
 		if (Start == End) {
@@ -84,10 +80,9 @@ public readonly struct LineSegment {
 				return (LineSegmentIntersection)PointAtParameterization(parameterAtStartOfOverlap);
 			}
 
-			return (LineSegmentIntersection) new LineSegment {
-				Start = PointAtParameterization(parameterAtStartOfOverlap),
-				End = PointAtParameterization(parameterAtEndOfOverlap)
-			};
+			return (LineSegmentIntersection) new LineSegment(
+				start: PointAtParameterization(parameterAtStartOfOverlap), 
+				end: PointAtParameterization(parameterAtEndOfOverlap));
 		}
 
 		// If both the the start and end points of other are on the positive side of the current line.
@@ -159,19 +154,17 @@ public readonly struct LineSegment {
 
 
 	public LineSegment RotateAround(double rotation, Point2 centerPoint) {
-
-		return new() {
-			Start = Start.Rotated(rotation, centerPoint),
-			End = End.Rotated(rotation, centerPoint)
-		};
+		
+		return new(
+			start: Start.Rotated(rotation, centerPoint),
+			end: End.Rotated(rotation, centerPoint));
 	}
 
 	public LineSegment Translate(Vector2 vector) {
 
-		return new() {
-			Start = new() { X = Start.X + vector.X, Y = Start.Y + vector.Y },
-			End = new() { X = End.X + vector.X, Y = End.Y + vector.Y }
-		};
+		return new(
+			start: new() { X = Start.X + vector.X, Y = Start.Y + vector.Y },
+			end: new() { X = End.X + vector.X, Y = End.Y + vector.Y });
 	}
 
 	// todo add comparison functions and operators
