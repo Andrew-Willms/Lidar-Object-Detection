@@ -14,6 +14,8 @@ public class GradientDescentParameters {
 
 	public required IConvergenceDecider ConvergenceDecider { get; init; }
 
-	public required IDivergenceDecider DivergenceDecider { get; set; }
+	public required IDivergenceDecider DivergenceDecider { get; init; }
+
+	//public required RectangularRegion SearchBounds { get; init; } // todo, limit search from trying beyond certain limits, maybe include wrapping rotation
 
 }
