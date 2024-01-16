@@ -33,8 +33,7 @@ public static class Detection {
 				.Rotated(point.Z)
 				.Translated(new(point.X, point.Y));
 
-			World world = new();
-			world.AddObject(transformedShape);
+			World world = new(transformedShape);
 
 			ImmutableArray<Point2> theoreticalLidarPoints = lidar.ScanInLidarCoords(world, Vector2.Zero, 0);
 
