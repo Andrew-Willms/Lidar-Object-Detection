@@ -13,7 +13,7 @@ namespace LidarObjectDetection;
 public static class Detection {
 
 #if DEBUG
-	public static (Point3?, List<GradientDescentData>) Detect(ImmutableArray<Point2> lidarPoints, Polygon shapeToFind, LidarScanner lidar, DetectionParameters parameters) {
+	public static (Point3?, List<GradientDescentData>) Detect(ImmutableArray<Point2> lidarPoints, Polygon shapeToFind, LidarScanner lidar, Vector2 lidarOffset, double lidarRotation, DetectionParameters parameters) {
 #else
 	public static Point3? Detect(ImmutableArray<Point2> lidarPoints, Polygon shapeToFind, LidarScanner lidar, DetectionParameters parameters) {
 #endif
@@ -60,10 +60,20 @@ public static class Detection {
 				localMinima.Add((Point3)result);
 			}
 		}
+
+		Point3? finalPoint = localMinima.MinByOrDefault(errorFunction);
+		if (finalPoint is not null) {
+
+			Point3 finalPointNotNull = (Point3)finalPoint;
+			Point2 finalPoint2d = new() { X = finalPointNotNull.X, Y = finalPointNotNull.Y};
+			finalPoint2d.Rotated(lidarRotation).Translated(lidarOffset);
+			finalPoint = new() { X = finalPoint2d.X, Y = finalPoint2d.Y, Z = finalPointNotNull.Z };
+		}
+
 #if DEBUG
-		return (localMinima.MinByOrDefault(errorFunction), gradientDescentData);
+		return (finalPoint, gradientDescentData);
 #else
-		return localMinima.MinByOrDefault(errorFunction);
+		return finalPoint;
 #endif
 	}
 

@@ -33,6 +33,16 @@ public readonly struct LidarScanner {
 
 	public ImmutableArray<Point2> ScanInLidarCoords(World world, Vector2 lidarOffsetFromWorldCenter, double lidarRotation) {
 
+		foreach (LineSegment beam in Beams) {
+
+			foreach (Polygon worldObject in world.Objects
+				         .Select(polygon => polygon.Translated(-lidarOffsetFromWorldCenter))
+				         .Select(polygon => polygon.Rotated(-lidarRotation))) {
+
+				Point2? nearestIntersection = worldObject.NearestIntersection(beam, beam.Start);
+			}
+		}
+
 		return Beams
 			.Select(beam => world.Objects
 				.Select(polygon => polygon.Translated(-lidarOffsetFromWorldCenter))

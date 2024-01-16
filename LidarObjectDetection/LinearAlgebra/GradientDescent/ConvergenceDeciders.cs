@@ -15,6 +15,9 @@ public interface IConvergenceDecider {
 
 public class ConsecutiveSmallGradientAndPointChange : IConvergenceDecider {
 
+	public required int MaxAllowedIterations { get; set; }
+	private int IterationCount = 0;
+
 	public required int ConsecutiveSmallIterationsRequired { get; set; }
 
 	public required double GradientThreshold { get; set; }
@@ -30,6 +33,11 @@ public class ConsecutiveSmallGradientAndPointChange : IConvergenceDecider {
 
 
 	public bool HasConverged(Point3 point, Vector3 gradient, Vector3 step) {
+
+		IterationCount++;
+		if (IterationCount > MaxAllowedIterations) {
+			return true;
+		}
 
 		if (gradient.Magnitude < GradientThreshold
 		    && Math.Abs(point.X - PreviousPoint.X) > PointChangeThreshold.X
