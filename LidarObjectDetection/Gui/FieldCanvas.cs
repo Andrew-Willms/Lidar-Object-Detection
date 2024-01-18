@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Diagnostics;
+using System.Linq;
 using LinearAlgebra;
 using Microsoft.Maui.Graphics;
 
@@ -7,12 +9,13 @@ namespace Gui;
 
 
 public class FieldCanvas {
+	private readonly Point2 TopLeftCorner;
+	private readonly Point2 BottomRightCorner;
 
-	private readonly float FieldWidth;
-	private readonly float FieldHeight;
-
-	private readonly Point2 FieldTopLeftCorner;
-	private readonly Point2 FieldBottomRightCorner;
+	private readonly LineSegment TopBorder;
+	private readonly LineSegment BottomBorder;
+	private readonly LineSegment LeftBorder;
+	private readonly LineSegment RightBorder;
 
 	private readonly double XOffset;
 	private readonly double YOffset;
@@ -24,35 +27,41 @@ public class FieldCanvas {
 
 
 	public FieldCanvas(
-		Point2 fieldTopLeftCorner,
-		Point2 fieldBottomRightCorner,
+		Point2 topLeftCorner,
+		Point2 bottomRightCorner,
 		ICanvas backingCanvas,
 		RectF canvasDimensions) {
+		TopLeftCorner = topLeftCorner;
+		BottomRightCorner = bottomRightCorner;
+		Point2 topRightCorner = new(bottomRightCorner.X, topLeftCorner.Y);
+		Point2 bottomLeftCorner = new(topLeftCorner.X, bottomRightCorner.Y);
 
-		FieldTopLeftCorner = fieldTopLeftCorner;
-		FieldBottomRightCorner = fieldBottomRightCorner;
-		Vector2 fieldSpan = new(FieldTopLeftCorner, FieldBottomRightCorner);
+		TopBorder = new(topLeftCorner, topRightCorner);
+		BottomBorder = new(bottomLeftCorner, bottomRightCorner);
+		LeftBorder = new(topLeftCorner, bottomLeftCorner);
+		RightBorder = new(topRightCorner, bottomRightCorner);
 
-		FieldWidth = Math.Abs((float)fieldSpan.X);
-		FieldHeight = Math.Abs((float)fieldSpan.Y);
+		Vector2 fieldSpan = new(TopLeftCorner, BottomRightCorner);
+		float width = Math.Abs((float)fieldSpan.X);
+		float height = Math.Abs((float)fieldSpan.Y);
 
 		BackingCanvas = backingCanvas;
 		CanvasDimensions = canvasDimensions;
 
 		double canvasRatio = CanvasDimensions.Width / CanvasDimensions.Height;
-		double fieldRatio = FieldWidth / FieldHeight;
+		double fieldRatio = width / height;
 
 		bool canvasHasExtraWidth = canvasRatio > fieldRatio;
 
 		if (canvasHasExtraWidth) {
-			DrawScalingFactor = CanvasDimensions.Height / FieldHeight;
-			XOffset = (CanvasDimensions.Width - FieldWidth * DrawScalingFactor);
+			DrawScalingFactor = CanvasDimensions.Height / height;
+			XOffset = (CanvasDimensions.Width - width * DrawScalingFactor);
 			YOffset = 0;
 
 		} else {
-			DrawScalingFactor = CanvasDimensions.Width / FieldWidth;
+			DrawScalingFactor = CanvasDimensions.Width / width;
 			XOffset = 0;
-			YOffset = (CanvasDimensions.Height - FieldHeight * DrawScalingFactor);
+			YOffset = (CanvasDimensions.Height - height * DrawScalingFactor);
 		}
 	}
 
@@ -65,44 +74,59 @@ public class FieldCanvas {
 
 	public void DrawPoint(float x, float y, Color color, float radius) {
 
+		if (x < TopLeftCorner.X || x > BottomRightCorner.X ||
+		    y < TopLeftCorner.Y || y > BottomRightCorner.Y) {
+
+			Debug.WriteLine($"Point ({x}, {y}) skipped because it was out of bounds of the field.");
+			return;
+		}
+
 		BackingCanvas.FillColor = color;
 		BackingCanvas.FillCircle(ToCanvasXPosition(x), ToCanvasYPosition(y), radius);
 	}
 
 	public void DrawLine(LineSegment line, Color lineColor, float lineThickness) {
 
-		DrawLine(line.Start.X, line.Start.Y, line.End.X, line.End.Y, lineColor, lineThickness);
-	}
+		bool startingPointOutOfBounds = line.Start.X < TopLeftCorner.X || line.Start.X > BottomRightCorner.X ||
+		                             line.Start.Y < TopLeftCorner.Y || line.Start.Y > BottomRightCorner.Y;
 
-	public void DrawLine(double xStart, double yStart, double xEnd, double yEnd, Color lineColor, float lineThickness) {
+		bool endingPointOutOfBounds = line.End.X < TopLeftCorner.X || line.End.X > BottomRightCorner.X ||
+		                           line.End.Y < TopLeftCorner.Y || line.End.Y > BottomRightCorner.Y;
 
-		//TODO make it cut off the lines when they extend beyond the edge of the field.
+		LineSegmentIntersection[] intersections = new[] {
+			line.Intersection(TopBorder),
+			line.Intersection(BottomBorder),
+			line.Intersection(LeftBorder),
+			line.Intersection(RightBorder)
+		}.Where(intersection => intersection is not null).ToArray()!;
 
-		if (xStart < FieldTopLeftCorner.X || xStart > FieldBottomRightCorner.X) {
-			throw new ArgumentException($"{nameof(xStart)} must be between {0} and {FieldWidth}, was {xStart}.");
-		}
+		// if any of the intersections are line segments
+		if (intersections.Any(intersection => intersection.IsT1)) {
+			line = intersections.First(intersection => intersection.IsT1).AsT1;
 
-		if (yStart < FieldBottomRightCorner.Y || yStart > FieldTopLeftCorner.Y) {
-			throw new ArgumentException($"{nameof(yStart)} must be between {0} and {FieldHeight}, was {yStart}.");
-		}
+		} else if (startingPointOutOfBounds && endingPointOutOfBounds) {
+			line = new(intersections.ElementAt(0).AsT0, intersections.ElementAt(1).AsT0);
 
-		if (xEnd < FieldTopLeftCorner.X || xEnd > FieldBottomRightCorner.X) {
-			throw new ArgumentException($"{nameof(xEnd)} must be between {0} and {FieldWidth}, was {xEnd}.");
-		}
+		} else if (startingPointOutOfBounds) {
+			line = new(intersections.ElementAt(0).AsT0, line.End);
 
-		if (yEnd < FieldBottomRightCorner.Y || yEnd > FieldTopLeftCorner.Y) {
-			throw new ArgumentException($"{nameof(yEnd)} must be between {0} and {FieldHeight}, was {yEnd}.");
+		} else if (endingPointOutOfBounds) {
+			line = new(line.Start, intersections.ElementAt(1).AsT0);
 		}
 
 		BackingCanvas.StrokeColor = lineColor;
 		BackingCanvas.StrokeSize = lineThickness;
 
-		float test1 = ToCanvasXPosition(xStart);
-		float test2 = ToCanvasYPosition(yStart);
-		float test3 = ToCanvasXPosition(xEnd);
-		float test4 = ToCanvasYPosition(yEnd);
+		BackingCanvas.DrawLine(
+			ToCanvasXPosition(line.Start.X),
+			ToCanvasYPosition(line.Start.Y),
+			ToCanvasXPosition(line.End.X),
+			ToCanvasYPosition(line.End.Y));
+	}
 
-		BackingCanvas.DrawLine(ToCanvasXPosition(xStart), ToCanvasYPosition(yStart), ToCanvasXPosition(xEnd), ToCanvasYPosition(yEnd));
+	public void DrawLine(double xStart, double yStart, double xEnd, double yEnd, Color lineColor, float lineThickness) {
+
+		DrawLine(new(new(xStart, yStart), new Point2(xEnd, yEnd)), lineColor, lineThickness);
 	}
 
 	public void DrawPolygon(Polygon polygon, Color lineColor, float lineThickness) {
