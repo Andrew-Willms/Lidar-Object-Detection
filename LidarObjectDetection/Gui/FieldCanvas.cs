@@ -104,13 +104,16 @@ public class FieldCanvas {
 		if (intersections.Any(intersection => intersection.IsT1)) {
 			line = intersections.First(intersection => intersection.IsT1).AsT1;
 
-		} else if (startingPointOutOfBounds && endingPointOutOfBounds) {
+		} else if (startingPointOutOfBounds && endingPointOutOfBounds && intersections.Length == 2) {
 			line = new(intersections.ElementAt(0).AsT0, intersections.ElementAt(1).AsT0);
 
-		} else if (startingPointOutOfBounds) {
+		} else if (startingPointOutOfBounds && endingPointOutOfBounds && intersections.Length == 0) {
+			return;
+
+		} else if (startingPointOutOfBounds && intersections.Length == 1) {
 			line = new(intersections.ElementAt(0).AsT0, line.End);
 
-		} else if (endingPointOutOfBounds) {
+		} else if (endingPointOutOfBounds && intersections.Length == 1) {
 			line = new(line.Start, intersections.ElementAt(1).AsT0);
 		}
 
