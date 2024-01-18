@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using LidarObjectDetection;
 using LinearAlgebra;
 using LinearAlgebra.GradientDescent;
 using Microsoft.Maui.Graphics;
@@ -15,11 +16,14 @@ public static class UiDetails {
 	public static readonly Color LidarScannerColor = Colors.Lime;
 	public const float LidarScannerLineThickness = 2;
 
+	public static readonly Color WorldObjectColor = Colors.Aqua;
+	public const float WorldObjectLineThickness = 2;
+
 	public static readonly Color LidarDataColor = Colors.Green;
 	public const float LidarDataRadius = 3;
 
 	public static readonly Color GuessPositionColor = Colors.Blue;
-	public const float GuessPositionLineThickness = 13;
+	public const float GuessPositionLineThickness = 1;
 
 }
 
@@ -42,6 +46,7 @@ public class GraphicsManager : IDrawable {
 	public required Point2 FieldBottomRightCorner { get; init; }
 
 	public required bool ShowLidarBeams { get; init; }
+	public required bool ShowObjectsOnField { get; init; }
 	public required bool ShowRealLidarPoints { get; init; }
 	public required bool ShowTheoreticalLidarPoints { get; init; }
 
@@ -61,12 +66,6 @@ public class GraphicsManager : IDrawable {
 
 
 
-	public GraphicsManager() {
-
-	}
-
-
-
 	public void Draw(ICanvas canvas, RectF dirtyRect) {
 
 		FieldCanvas fieldCanvas = new(FieldTopLeftCorner, FieldBottomRightCorner, canvas, dirtyRect);
@@ -75,7 +74,9 @@ public class GraphicsManager : IDrawable {
 			DrawLidarBeams(fieldCanvas);
 		}
 
-		return;
+		if (ShowObjectsOnField) {
+			DrawObjectsOnField(fieldCanvas);
+		}
 
 		if (ShowRealLidarPoints) {
 
@@ -86,8 +87,6 @@ public class GraphicsManager : IDrawable {
 			: TestCaseResults.data.Where((_, index) => RoutesToShow.Contains(index)).ToList();
 
 		DrawRoutes(fieldCanvas, routesToDraw);
-
-
 	}
 
 	private void DrawLidarBeams(FieldCanvas fieldCanvas) {
@@ -100,6 +99,14 @@ public class GraphicsManager : IDrawable {
 		foreach (LineSegment lineSegment in lidarBeamsInWorldSpace) {
 
 			fieldCanvas.DrawLine(lineSegment, UiDetails.LidarScannerColor, UiDetails.LidarScannerLineThickness);
+		}
+	}
+
+	private void DrawObjectsOnField(FieldCanvas fieldCanvas) {
+
+		foreach (Polygon worldObject in TestCase.World.Objects) {
+			
+			fieldCanvas.DrawPolygon(worldObject, UiDetails.WorldObjectColor, UiDetails.WorldObjectLineThickness);
 		}
 	}
 
@@ -126,7 +133,9 @@ public class GraphicsManager : IDrawable {
 
 					Polygon shape = TestCase.ShapeToFind
 						.Rotated(gradientDescentData.Points[index].Z)
-						.Translated(new(gradientDescentData.Points[index].Z, gradientDescentData.Points[index].Y));
+						.Translated(new(gradientDescentData.Points[index].Z, gradientDescentData.Points[index].Y))
+						.Rotated(TestCase.LidarRotation)
+						.Translated(TestCase.LidarOffset);
 
 					fieldCanvas.DrawPolygon(shape, UiDetails.GuessPositionColor, UiDetails.GuessPositionLineThickness);
 				}

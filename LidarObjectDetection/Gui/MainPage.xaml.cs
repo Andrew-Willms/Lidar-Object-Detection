@@ -11,6 +11,7 @@ public partial class MainPage : ContentPage {
 		FieldTopLeftCorner = new(-15, 11),
 		FieldBottomRightCorner = new(15, -1),
 		ShowLidarBeams = true,
+		ShowObjectsOnField = true,
 		ShowRealLidarPoints = true,
 		ShowTheoreticalLidarPoints = true,
 		ShowShapeToFind = true,

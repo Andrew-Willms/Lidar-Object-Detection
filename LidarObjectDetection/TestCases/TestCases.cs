@@ -14,17 +14,17 @@ public static class TestCases {
 
 		World = new(
 			new Polygon(new Point2(-0.5, -0.5), new(0.5, -0.5), new(0.5, 0.5), new(-0.5, 0.5))
-				.Rotated(45)
-				.Translated(new(2, 2))),
+				.Rotated(0)
+				.Translated(new(3, 2))),
 
 		Lidar = new() {
 			Beams = new[] {
-				//new LineSegment(new(-1, 0), new Point2(-1, 10)),
-				//new LineSegment(new(-0.9, 0), new Point2(-0.9, 10)),
-				//new LineSegment(new(-0.8, 0), new Point2(-0.8, 10)),
-				//new LineSegment(new(-0.7, 0), new Point2(-0.7, 10)),
-				//new LineSegment(new(-0.6, 0), new Point2(-0.6, 10)),
-				//new LineSegment(new(-0.5, 0), new Point2(-0.5, 10)),
+				new LineSegment(new(-1, 0), new Point2(-1, 10)),
+				new LineSegment(new(-0.9, 0), new Point2(-0.9, 10)),
+				new LineSegment(new(-0.8, 0), new Point2(-0.8, 10)),
+				new LineSegment(new(-0.7, 0), new Point2(-0.7, 10)),
+				new LineSegment(new(-0.6, 0), new Point2(-0.6, 10)),
+				new LineSegment(new(-0.5, 0), new Point2(-0.5, 10)),
 				new LineSegment(new(-0.4, 0), new Point2(-0.4, 10)),
 				new LineSegment(new(-0.3, 0), new Point2(-0.3, 10)),
 				new LineSegment(new(-0.2, 0), new Point2(-0.2, 10)),
@@ -34,24 +34,24 @@ public static class TestCases {
 				new LineSegment(new(0.2, 0), new Point2(0.2, 10)),
 				new LineSegment(new(0.3, 0), new Point2(0.3, 10)),
 				new LineSegment(new(0.4, 0), new Point2(0.4, 10)),
-				//new LineSegment(new(0.5, 0), new Point2(0.5, 10)),
-				//new LineSegment(new(0.6, 0), new Point2(0.6, 10)),
-				//new LineSegment(new(0.7, 0), new Point2(0.7, 10)),
-				//new LineSegment(new(0.8, 0), new Point2(0.8, 10)),
-				//new LineSegment(new(0.9, 0), new Point2(0.9, 10)),
-				//new LineSegment(new(1, 0), new Point2(1, 10)),
+				new LineSegment(new(0.5, 0), new Point2(0.5, 10)),
+				new LineSegment(new(0.6, 0), new Point2(0.6, 10)),
+				new LineSegment(new(0.7, 0), new Point2(0.7, 10)),
+				new LineSegment(new(0.8, 0), new Point2(0.8, 10)),
+				new LineSegment(new(0.9, 0), new Point2(0.9, 10)),
+				new LineSegment(new(1, 0), new Point2(1, 10)),
 			}
 		},
 
-		LidarOffset = new(2, 0),
+		LidarOffset = new(1, 0),
 
-		LidarRotation = 45,
+		LidarRotation = -45,
 
 		DetectionParameters = new() {
 
-			StartingPointCount = 20,
+			StartingPointCount = 10,
 
-			SearchRegion = new() { CornerA = new(-0.1, 0.75, 0), CornerB = new(0.1, 5, 90) },
+			SearchRegion = new() { CornerA = new(-0.3, 0.75, 0), CornerB = new(0.3, 5, 90) },
 
 			StartingPointDistributor = StartingPointDistributors.EvenCubicGridDistributor,
 

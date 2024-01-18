@@ -9,6 +9,7 @@ namespace Gui;
 
 
 public class FieldCanvas {
+
 	private readonly Point2 TopLeftCorner;
 	private readonly Point2 BottomRightCorner;
 
@@ -75,7 +76,7 @@ public class FieldCanvas {
 	public void DrawPoint(float x, float y, Color color, float radius) {
 
 		if (x < TopLeftCorner.X || x > BottomRightCorner.X ||
-		    y < TopLeftCorner.Y || y > BottomRightCorner.Y) {
+		    y > TopLeftCorner.Y || y < BottomRightCorner.Y) {
 
 			Debug.WriteLine($"Point ({x}, {y}) skipped because it was out of bounds of the field.");
 			return;
@@ -88,10 +89,10 @@ public class FieldCanvas {
 	public void DrawLine(LineSegment line, Color lineColor, float lineThickness) {
 
 		bool startingPointOutOfBounds = line.Start.X < TopLeftCorner.X || line.Start.X > BottomRightCorner.X ||
-		                             line.Start.Y < TopLeftCorner.Y || line.Start.Y > BottomRightCorner.Y;
+		                             line.Start.Y > TopLeftCorner.Y || line.Start.Y < BottomRightCorner.Y;
 
 		bool endingPointOutOfBounds = line.End.X < TopLeftCorner.X || line.End.X > BottomRightCorner.X ||
-		                           line.End.Y < TopLeftCorner.Y || line.End.Y > BottomRightCorner.Y;
+		                           line.End.Y > TopLeftCorner.Y || line.End.Y < BottomRightCorner.Y;
 
 		LineSegmentIntersection[] intersections = new[] {
 			line.Intersection(TopBorder),
@@ -114,7 +115,7 @@ public class FieldCanvas {
 			line = new(intersections.ElementAt(0).AsT0, line.End);
 
 		} else if (endingPointOutOfBounds && intersections.Length == 1) {
-			line = new(line.Start, intersections.ElementAt(1).AsT0);
+			line = new(line.Start, intersections.ElementAt(0).AsT0);
 		}
 
 		BackingCanvas.StrokeColor = lineColor;
@@ -143,10 +144,14 @@ public class FieldCanvas {
 
 	private float ToCanvasXPosition(double xPosition) {
 
+		xPosition -= TopLeftCorner.X;
+
 		return (float)(XOffset + xPosition * DrawScalingFactor);
 	}
 
 	private float ToCanvasYPosition(double yPosition) {
+
+		yPosition -= BottomRightCorner.Y;
 
 		return CanvasDimensions.Height - (float)(YOffset + yPosition * DrawScalingFactor);
 	}
