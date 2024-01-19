@@ -11,19 +11,16 @@ namespace LidarObjectDetection;
 
 public static class Detection {
 
-#if DEBUG
-	public static (Point3?, List<GradientDescentData>) Detect(ImmutableArray<Point2> lidarPoints, Polygon shapeToFind, LidarScanner lidar, Vector2 lidarOffset, double lidarRotation, DetectionParameters parameters) {
-#else
-	public static Point3? Detect(ImmutableArray<Point2> lidarPoints, Polygon shapeToFind, LidarScanner lidar, Vector2 lidarOffset, double lidarRotation, DetectionParameters parameters) {
-#endif
+	public static (Point3?, List<GradientDescentData>) Detect(ImmutableArray<Point2> lidarPoints,
+		Polygon shapeToFind,
+		LidarScanner lidar,
+		Vector2 lidarOffset,
+		double lidarRotation,
+		DetectionParameters parameters) {
 
-		ILeastDistanceCalculator? leastDistanceCalculator = parameters.LeastDistanceCalculatorCreator(lidarPoints);
+		ILeastDistanceCalculator? leastDistanceCalculator = parameters.LeastDistanceCalculatorCreator(lidarPoints); // todo translate to lidar coords
 		if (leastDistanceCalculator is null) {
-#if DEBUG
 			return (null, new());
-#else
-			return null;
-#endif
 		}
 
 		Func<Point3, double> errorFunction = point => {
@@ -52,35 +49,27 @@ public static class Detection {
 		List<GradientDescentData> gradientDescentData = new();
 
 		foreach (Point3 startingPoint in startingPoints) {
-#if DEBUG
+
 			Point3? result = GradientDescent.Descent(errorFunction, startingPoint, parameters.GradientDescentParameters, out GradientDescentData data);
 			gradientDescentData.Add(data);
-#else
-			Point3? result = GradientDescent.Descent(errorFunction, startingPoint, parameters.GradientDescentParameters);
-#endif
+
 			if (result is not null) {
 				localMinima.Add((Point3)result);
 			}
 		}
 
 		if (localMinima.Count == 0) {
-#if DEBUG
 			return (null, gradientDescentData);
-#else
-			return finalPoint;
-#endif
 		}
 
 		Point3 finalPoint = localMinima.MinBy(errorFunction);
-		Point2 finalPoint2d = new() { X = finalPoint.X, Y = finalPoint.Y };
-		finalPoint2d.Rotated(lidarRotation).Translated(lidarOffset);
-		finalPoint = new() { X = finalPoint2d.X, Y = finalPoint2d.Y, Z = finalPoint.Z };
 
-#if DEBUG
+		Point2 finalPoint2d = new Point2(finalPoint.X, finalPoint.Y)
+			.Rotated(lidarRotation)
+			.Translated(lidarOffset);
+
+		finalPoint = new() { X = finalPoint2d.X, Y = finalPoint2d.Y, Z = finalPoint.Z + lidarRotation};
 		return (finalPoint, gradientDescentData);
-#else
-		return finalPoint;
-#endif
 	}
 
 }
