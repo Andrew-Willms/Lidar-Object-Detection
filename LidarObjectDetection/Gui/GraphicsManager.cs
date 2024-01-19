@@ -1,17 +1,19 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using LidarObjectDetection;
 using LinearAlgebra;
 using LinearAlgebra.GradientDescent;
 using Microsoft.Maui.Graphics;
 using TestCases;
+using Polygon = LinearAlgebra.Polygon;
 
 namespace Gui;
 
 
 
 public static class UiDetails {
+
+	public static readonly Color FieldBackgroundColor = Colors.Black;
 
 	public static readonly Color LidarScannerColor = Colors.Lime;
 	public const float LidarScannerLineThickness = 2;
@@ -24,6 +26,9 @@ public static class UiDetails {
 
 	public static readonly Color GuessPositionColor = Colors.Blue;
 	public const float GuessPositionLineThickness = 1;
+
+	public static readonly Color FinalPositionColor = Colors.Magenta;
+	public const float FinalPositionLineThickness = 1;
 
 }
 
@@ -70,6 +75,8 @@ public class GraphicsManager : IDrawable {
 
 		FieldCanvas fieldCanvas = new(FieldTopLeftCorner, FieldBottomRightCorner, canvas, dirtyRect);
 
+		DrawBackground();
+
 		if (ShowLidarBeams) {
 			DrawLidarBeams(fieldCanvas);
 		}
@@ -82,11 +89,17 @@ public class GraphicsManager : IDrawable {
 
 		}
 
-		List<GradientDescentData> routesToDraw = ShowAllRoutes
-			? TestCaseResults.data 
-			: TestCaseResults.data.Where((_, index) => RoutesToShow.Contains(index)).ToList();
+		DrawRoutes(fieldCanvas);
 
-		DrawRoutes(fieldCanvas, routesToDraw);
+		if (ShowFinalPosition) {
+			DrawFinalPosition(fieldCanvas);
+		}
+	}
+
+	private void DrawBackground() {
+
+
+
 	}
 
 	private void DrawLidarBeams(FieldCanvas fieldCanvas) {
@@ -123,9 +136,13 @@ public class GraphicsManager : IDrawable {
 		}
 	}
 
-	private void DrawRoutes(FieldCanvas fieldCanvas, List<GradientDescentData> routes) {
+	private void DrawRoutes(FieldCanvas fieldCanvas) {
 
-		foreach (GradientDescentData gradientDescentData in routes) {
+		List<GradientDescentData> routesToDraw = ShowAllRoutes
+			? TestCaseResults.data
+			: TestCaseResults.data.Where((_, index) => RoutesToShow.Contains(index)).ToList();
+
+		foreach (GradientDescentData gradientDescentData in routesToDraw) {
 
 			for (int index = 0; index < gradientDescentData.Points.Count; index++) {
 
@@ -133,7 +150,7 @@ public class GraphicsManager : IDrawable {
 
 					Polygon shape = TestCase.ShapeToFind
 						.Rotated(gradientDescentData.Points[index].Z)
-						.Translated(new(gradientDescentData.Points[index].Z, gradientDescentData.Points[index].Y))
+						.Translated(new(gradientDescentData.Points[index].X, gradientDescentData.Points[index].Y))
 						.Rotated(TestCase.LidarRotation)
 						.Translated(TestCase.LidarOffset);
 
@@ -148,6 +165,23 @@ public class GraphicsManager : IDrawable {
 					// todo
 				}
 			}
+		}
+	}
+
+	private void DrawFinalPosition(FieldCanvas fieldCanvas) {
+
+		if (TestCaseResults.position is null) {
+			return;
+		}
+
+		Point3 finalPosition = (Point3)TestCaseResults.position!;
+
+		Polygon finalGuess = TestCase.ShapeToFind
+			.Rotated(finalPosition.Z)
+			.Translated(new(finalPosition.X, finalPosition.Y));
+
+		if (TestCaseResults.position is not null) {
+			fieldCanvas.DrawPolygon(finalGuess, UiDetails.FinalPositionColor, UiDetails.FinalPositionLineThickness);
 		}
 	}
 

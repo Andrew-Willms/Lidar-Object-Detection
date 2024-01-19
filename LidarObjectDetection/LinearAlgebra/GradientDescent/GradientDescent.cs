@@ -13,7 +13,7 @@ public static class GradientDescent {
 #endif
 		Vector3 previousGradient = parameters.InitialGradientApproximation(function, startingPoint);
 		Vector3 step = parameters.InitialStepCalculator(previousGradient);
-		Point3 previousPoint = startingPoint.Translated(step);
+		Point3 previousPoint = startingPoint;
 #if DEBUG
 		data = new() { Parameters = parameters };
 		data.Gradients.Add(previousGradient);
@@ -22,13 +22,18 @@ public static class GradientDescent {
 #endif
 		while (true) {
 
-			Vector3 gradient = parameters.GradientApproximation(function, startingPoint, step);
+			Vector3 gradient = parameters.GradientApproximation(function, previousPoint, step);
 			step = parameters.StepCalculator(step, previousGradient, gradient);
 			Point3 point = previousPoint.Translated(step);
 #if DEBUG
 			data.Gradients.Add(gradient);
 			data.Steps.Add(step);
 			data.Points.Add(point);
+			data.Errors.Add(function(point));
+
+			if (data.Errors.Count == 800) {
+				Console.WriteLine("");
+			}
 #endif
 			previousPoint = point;
 			previousGradient = gradient;

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using LinearAlgebra;
@@ -33,16 +34,6 @@ public readonly struct LidarScanner {
 
 	public ImmutableArray<Point2> ScanInLidarCoords(World world, Vector2 lidarOffsetFromWorldCenter, double lidarRotation) {
 
-		foreach (LineSegment beam in Beams) {
-
-			foreach (Polygon worldObject in world.Objects
-				         .Select(polygon => polygon.Translated(-lidarOffsetFromWorldCenter))
-				         .Select(polygon => polygon.Rotated(-lidarRotation))) {
-
-				Point2? nearestIntersection = worldObject.NearestIntersection(beam, beam.Start);
-			}
-		}
-
 		return Beams
 			.Select(beam => world.Objects
 				.Select(polygon => polygon.Translated(-lidarOffsetFromWorldCenter))
@@ -50,7 +41,9 @@ public readonly struct LidarScanner {
 				.Select(polygon => polygon.NearestIntersection(beam, beam.Start))
 				.Where(intersection => intersection is not null)
 				.Select(intersection => (Point2)intersection!)
-				.MinByOrDefault(intersection => intersection.DistanceFrom(beam.Start)))
+				.OrderBy(intersection => intersection.DistanceFrom(beam.Start)))
+			.Where(intersectionList => intersectionList.Any())
+			.Select(intersectionList => intersectionList.First())
 			.ToImmutableArray();
 	}
 

@@ -3,7 +3,8 @@
 			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
 			 xmlns:gui="clr-namespace:Gui"
 			 x:Class="Gui.MainPage"
-			 x:DataType="gui:MainPage">
+			 x:DataType="gui:MainPage"
+			 BackgroundColor="#404040">
 
 	<ScrollView>
 		<Grid>
@@ -13,15 +14,11 @@
 				<RowDefinition Height="auto"/>
 			</Grid.RowDefinitions>
 
-			<Border 
-				Stroke="AliceBlue"
-				StrokeThickness="3">
-
-				<GraphicsView 
-					x:Name="GraphicsView"
-					Drawable="{Binding GraphicsManager, Mode=OneWay}"/>
-
-			</Border>
+			<GraphicsView 
+				x:Name="GraphicsView"
+				Drawable="{Binding GraphicsManager, Mode=OneWay}"
+				Margin="10"
+				HorizontalOptions="Fill"/>
 
 		</Grid>
 	</ScrollView>

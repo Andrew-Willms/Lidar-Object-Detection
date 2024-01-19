@@ -46,4 +46,9 @@ public static class StartingPointDistributors {
 		return points;
 	}
 
+	public static Point3[] DiscretePointDistributor(int startingPointCount, RectangularRegion searchRegion, params Point3[] points) {
+
+		return points;
+	}
+
 }

@@ -14,6 +14,8 @@ public class GradientDescentData {
 
 	public List<Vector3> Steps { get; } = new();
 
+	public List<double> Errors { get; } = new();
+
 	//public List<List<Point2>> TheoreticalLidarPoints { get; } = new(); // todo
 
 }

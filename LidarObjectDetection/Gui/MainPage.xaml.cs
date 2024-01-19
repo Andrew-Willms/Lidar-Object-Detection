@@ -8,8 +8,8 @@ public partial class MainPage : ContentPage {
 
 	public GraphicsManager GraphicsManager { get; } = new() {
 		TestCase = TestCases.TestCases.TestCase1,
-		FieldTopLeftCorner = new(-15, 11),
-		FieldBottomRightCorner = new(15, -1),
+		FieldTopLeftCorner = new(-4, 4.5),
+		FieldBottomRightCorner = new(4, -0.2),
 		ShowLidarBeams = true,
 		ShowObjectsOnField = true,
 		ShowRealLidarPoints = true,

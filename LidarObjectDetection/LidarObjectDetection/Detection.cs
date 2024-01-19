@@ -60,7 +60,13 @@ public static class Detection {
 			}
 		}
 
-		Point3? finalPoint = localMinima.MinByOrDefault(errorFunction);
+		Point3? finalPoint;
+		try {
+			finalPoint = localMinima.MinByOrDefault(errorFunction);
+		} catch {
+			finalPoint = localMinima.First();
+		}
+
 		if (finalPoint is not null) {
 
 			Point3 finalPointNotNull = (Point3)finalPoint;

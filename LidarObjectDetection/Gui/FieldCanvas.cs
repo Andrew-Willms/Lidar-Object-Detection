@@ -32,6 +32,7 @@ public class FieldCanvas {
 		Point2 bottomRightCorner,
 		ICanvas backingCanvas,
 		RectF canvasDimensions) {
+
 		TopLeftCorner = topLeftCorner;
 		BottomRightCorner = bottomRightCorner;
 		Point2 topRightCorner = new(bottomRightCorner.X, topLeftCorner.Y);
@@ -56,17 +57,31 @@ public class FieldCanvas {
 
 		if (canvasHasExtraWidth) {
 			DrawScalingFactor = CanvasDimensions.Height / height;
-			XOffset = (CanvasDimensions.Width - width * DrawScalingFactor);
+			XOffset = (CanvasDimensions.Width - width * DrawScalingFactor) / 2;
 			YOffset = 0;
 
 		} else {
 			DrawScalingFactor = CanvasDimensions.Width / width;
 			XOffset = 0;
-			YOffset = (CanvasDimensions.Height - height * DrawScalingFactor);
+			YOffset = (CanvasDimensions.Height - height * DrawScalingFactor) / 2;
 		}
+
+		DrawFieldBackground();
 	}
 
 
+
+	public void DrawFieldBackground() {
+
+		float canvasStartX = ToCanvasXPosition(TopLeftCorner.X);
+		float canvasStartY = ToCanvasYPosition(TopLeftCorner.Y);
+		float canvasWidth = ToCanvasXPosition(BottomRightCorner.X) - canvasStartX;
+		float canvasHeight = ToCanvasYPosition(BottomRightCorner.Y) - canvasStartY;
+
+		BackingCanvas.FillColor = UiDetails.FieldBackgroundColor;
+
+		BackingCanvas.FillRectangle(canvasStartX, canvasStartY, canvasWidth, canvasHeight);
+	}
 
 	public void DrawPoint(Point2 point, Color color, float radius) {
 

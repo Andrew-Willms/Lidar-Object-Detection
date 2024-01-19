@@ -24,7 +24,7 @@ public static class GradientApproximations {
 		double yPartial = (valueAtYOffset - valueAtPoint) / approximationDeltaSize.Y;
 		double zPartial = (valueAtZOffset - valueAtPoint) / approximationDeltaSize.Z;
 
-		return new() { X = xPartial, Y = yPartial, Z = zPartial };
+		return new() { X = -xPartial, Y = -yPartial, Z = -zPartial };
 	}
 
 	public static Vector3 ConstantDifference(Func<Point3, double> function, Point3 point, Vector3 previousStep, Vector3 approximationDeltaSize) {

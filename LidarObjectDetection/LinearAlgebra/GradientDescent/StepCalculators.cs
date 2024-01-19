@@ -44,4 +44,9 @@ public static class StepCalculators {
 		return gradient * scalingFactor;
 	}
 
+	public static Vector3 ScaleGradientByPart(Vector3 previousStep, Vector3 previousGradient, Vector3 gradient, Vector3 scalingFactor) {
+
+		return new(gradient.X * scalingFactor.X, gradient.Y * scalingFactor.Y, gradient.Z * scalingFactor.Z);
+	}
+
 }

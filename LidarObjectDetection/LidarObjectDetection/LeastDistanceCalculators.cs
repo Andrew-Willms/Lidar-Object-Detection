@@ -39,6 +39,9 @@ public readonly struct DumbLeastDistanceCalculator : ILeastDistanceCalculator {
 	}
 
 	public double DistanceTo(Point2 point) {
+
+		double test = OtherPoints.Select(point.DistanceFrom).Min();
+
 		return OtherPoints.Select(point.DistanceFrom).Min();
 	}
 

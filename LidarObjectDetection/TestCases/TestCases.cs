@@ -10,42 +10,42 @@ public static class TestCases {
 
 	public static readonly TestCase TestCase1 = new() {
 
-		ShapeToFind = new(new Point2(-0.5, -0.5), new(0.5, -0.5), new(0.5, 0.5), new(-0.5, 0.5)),
+		ShapeToFind = new(new Point2(-0.25, -0.25), new(0.25, -0.25), new(0.25, 0.25), new(-0.25, 0.25)),
 
 		World = new(
-			new Polygon(new Point2(-0.5, -0.5), new(0.5, -0.5), new(0.5, 0.5), new(-0.5, 0.5))
-				.Rotated(0)
-				.Translated(new(3, 2))),
+			new Polygon(new Point2(-0.25, -0.25), new(0.25, -0.25), new(0.25, 0.25), new(-0.25, 0.25))
+				.Rotated(34)
+				.Translated(new(0, 3))),
 
 		Lidar = new() {
 			Beams = new[] {
-				new LineSegment(new(-1, 0), new Point2(-1, 10)),
-				new LineSegment(new(-0.9, 0), new Point2(-0.9, 10)),
-				new LineSegment(new(-0.8, 0), new Point2(-0.8, 10)),
-				new LineSegment(new(-0.7, 0), new Point2(-0.7, 10)),
-				new LineSegment(new(-0.6, 0), new Point2(-0.6, 10)),
-				new LineSegment(new(-0.5, 0), new Point2(-0.5, 10)),
-				new LineSegment(new(-0.4, 0), new Point2(-0.4, 10)),
-				new LineSegment(new(-0.3, 0), new Point2(-0.3, 10)),
-				new LineSegment(new(-0.2, 0), new Point2(-0.2, 10)),
-				new LineSegment(new(-0.1, 0), new Point2(-0.1, 10)),
-				new LineSegment(new(0, 0), new Point2(0, 10)),
-				new LineSegment(new(0.1, 0), new Point2(0.1, 10)),
-				new LineSegment(new(0.2, 0), new Point2(0.2, 10)),
-				new LineSegment(new(0.3, 0), new Point2(0.3, 10)),
-				new LineSegment(new(0.4, 0), new Point2(0.4, 10)),
-				new LineSegment(new(0.5, 0), new Point2(0.5, 10)),
-				new LineSegment(new(0.6, 0), new Point2(0.6, 10)),
-				new LineSegment(new(0.7, 0), new Point2(0.7, 10)),
-				new LineSegment(new(0.8, 0), new Point2(0.8, 10)),
-				new LineSegment(new(0.9, 0), new Point2(0.9, 10)),
-				new LineSegment(new(1, 0), new Point2(1, 10)),
+				new LineSegment(new(-1, 0), new Point2(-1, 5)),
+				new LineSegment(new(-0.9, 0), new Point2(-0.9, 5)),
+				new LineSegment(new(-0.8, 0), new Point2(-0.8, 5)),
+				new LineSegment(new(-0.7, 0), new Point2(-0.7, 5)),
+				new LineSegment(new(-0.6, 0), new Point2(-0.6, 5)),
+				new LineSegment(new(-0.5, 0), new Point2(-0.5, 5)),
+				new LineSegment(new(-0.4, 0), new Point2(-0.4, 5)),
+				new LineSegment(new(-0.3, 0), new Point2(-0.3, 5)),
+				new LineSegment(new(-0.2, 0), new Point2(-0.2, 5)),
+				new LineSegment(new(-0.1, 0), new Point2(-0.1, 5)),
+				new LineSegment(new(0, 0), new Point2(0, 5)),
+				new LineSegment(new(0.1, 0), new Point2(0.1, 5)),
+				new LineSegment(new(0.2, 0), new Point2(0.2, 5)),
+				new LineSegment(new(0.3, 0), new Point2(0.3, 5)),
+				new LineSegment(new(0.4, 0), new Point2(0.4, 5)),
+				new LineSegment(new(0.5, 0), new Point2(0.5, 5)),
+				new LineSegment(new(0.6, 0), new Point2(0.6, 5)),
+				new LineSegment(new(0.7, 0), new Point2(0.7, 5)),
+				new LineSegment(new(0.8, 0), new Point2(0.8, 5)),
+				new LineSegment(new(0.9, 0), new Point2(0.9, 5)),
+				new LineSegment(new(1, 0), new Point2(1, 5)),
 			}
 		},
 
-		LidarOffset = new(1, 0),
+		LidarOffset = new(0, 0),
 
-		LidarRotation = -45,
+		LidarRotation = 0,
 
 		DetectionParameters = new() {
 
@@ -53,7 +53,8 @@ public static class TestCases {
 
 			SearchRegion = new() { CornerA = new(-0.3, 0.75, 0), CornerB = new(0.3, 5, 90) },
 
-			StartingPointDistributor = StartingPointDistributors.EvenCubicGridDistributor,
+			//StartingPointDistributor = (count, region) => StartingPointDistributors.DiscretePointDistributor(count, region, new Point3(0.2, 2, 20)),
+			StartingPointDistributor = (count, region) => StartingPointDistributors.DiscretePointDistributor(count, region, new Point3(0.6, 4, 20)),
 
 			GradientDescentParameters = new() {
 
@@ -61,9 +62,9 @@ public static class TestCases {
 
 				GradientApproximation = (function, point, previousLocation) => GradientApproximations.ConstantDifference(function, point, previousLocation, new(0.1, 0.1, 0.1)),
 
-				InitialStepCalculator = gradient => InitialStepCalculators.ConstantStep(gradient, 0.001),
+				InitialStepCalculator = gradient => InitialStepCalculators.ScaleGradient(gradient, 0.05),
 
-				StepCalculator = (previousStep, previousGradient, gradient) => StepCalculators.ConstantStep(previousStep, previousGradient, gradient, 0.08),
+				StepCalculator = (previousStep, previousGradient, gradient) => StepCalculators.ScaleGradientByPart(previousStep, previousGradient, gradient, new(0.1, 0.1, 15)),
 
 				ConvergenceDecider = new ConsecutiveSmallGradientAndPointChange {
 					MaxAllowedIterations = 1000,
