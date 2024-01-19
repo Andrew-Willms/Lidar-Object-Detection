@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Linq;
 using LinearAlgebra;
 using LinearAlgebra.GradientDescent;
@@ -75,8 +76,6 @@ public class GraphicsManager : IDrawable {
 
 		FieldCanvas fieldCanvas = new(FieldTopLeftCorner, FieldBottomRightCorner, canvas, dirtyRect);
 
-		DrawBackground();
-
 		if (ShowLidarBeams) {
 			DrawLidarBeams(fieldCanvas);
 		}
@@ -94,12 +93,6 @@ public class GraphicsManager : IDrawable {
 		if (ShowFinalPosition) {
 			DrawFinalPosition(fieldCanvas);
 		}
-	}
-
-	private void DrawBackground() {
-
-
-
 	}
 
 	private void DrawLidarBeams(FieldCanvas fieldCanvas) {

@@ -4,7 +4,6 @@ using System.Collections.Immutable;
 using System.Linq;
 using LinearAlgebra;
 using LinearAlgebra.GradientDescent;
-using LinqUtilities;
 
 namespace LidarObjectDetection;
 
@@ -37,6 +36,10 @@ public static class Detection {
 
 			ImmutableArray<Point2> theoreticalLidarPoints = lidar.ScanInLidarCoords(world, Vector2.Zero, 0);
 
+			if (theoreticalLidarPoints.Length == 0) {
+				return double.MaxValue;
+			}
+
 			double[] errors = theoreticalLidarPoints.Select(leastDistanceCalculator.DistanceTo).ToArray();
 
 			return parameters.CumulativeErrorFunction(errors);
@@ -60,20 +63,18 @@ public static class Detection {
 			}
 		}
 
-		Point3? finalPoint;
-		try {
-			finalPoint = localMinima.MinByOrDefault(errorFunction);
-		} catch {
-			finalPoint = localMinima.First();
+		if (localMinima.Count == 0) {
+#if DEBUG
+			return (null, gradientDescentData);
+#else
+			return finalPoint;
+#endif
 		}
 
-		if (finalPoint is not null) {
-
-			Point3 finalPointNotNull = (Point3)finalPoint;
-			Point2 finalPoint2d = new() { X = finalPointNotNull.X, Y = finalPointNotNull.Y};
-			finalPoint2d.Rotated(lidarRotation).Translated(lidarOffset);
-			finalPoint = new() { X = finalPoint2d.X, Y = finalPoint2d.Y, Z = finalPointNotNull.Z };
-		}
+		Point3 finalPoint = localMinima.MinBy(errorFunction);
+		Point2 finalPoint2d = new() { X = finalPoint.X, Y = finalPoint.Y };
+		finalPoint2d.Rotated(lidarRotation).Translated(lidarOffset);
+		finalPoint = new() { X = finalPoint2d.X, Y = finalPoint2d.Y, Z = finalPoint.Z };
 
 #if DEBUG
 		return (finalPoint, gradientDescentData);

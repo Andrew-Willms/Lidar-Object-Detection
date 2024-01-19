@@ -23,7 +23,7 @@ public static class StartingPointDistributors {
 
 		double cellWidth = searchRegion.Width / cellsWide;
 		double cellHeight = searchRegion.Height / cellsHigh;
-		double cellDepth = searchRegion.Width / cellsDeep;
+		double cellDepth = searchRegion.Depth / cellsDeep;
 
 		Point3[] points = new Point3[cellsWide * cellsHigh * cellsDeep];
 
@@ -49,6 +49,34 @@ public static class StartingPointDistributors {
 	public static Point3[] DiscretePointDistributor(int startingPointCount, RectangularRegion searchRegion, params Point3[] points) {
 
 		return points;
+	}
+
+	public static Point3[] RectangularDistributor(int _, RectangularRegion searchRegion, int cellsWide, int cellsHigh, int cellsDeep) {
+
+		double cellWidth = searchRegion.Width / cellsWide;
+		double cellHeight = searchRegion.Height / cellsHigh;
+		double cellDepth = searchRegion.Depth / cellsDeep;
+
+		Point3[] points = new Point3[cellsWide * cellsHigh * cellsDeep];
+
+		int cellIndex = 0;
+		for (int widthIndex = 0; widthIndex < cellsWide; widthIndex++) {
+			for (int heightIndex = 0; heightIndex < cellsHigh; heightIndex++) {
+				for (int depthIndex = 0; depthIndex < cellsDeep; depthIndex++) {
+
+					points[cellIndex] = new() {
+						X = cellWidth * (0.5 + widthIndex),
+						Y = cellHeight * (0.5 + heightIndex),
+						Z = cellDepth * (0.5 + depthIndex)
+					};
+
+					cellIndex++;
+				}
+			}
+		}
+
+		return points;
+
 	}
 
 }

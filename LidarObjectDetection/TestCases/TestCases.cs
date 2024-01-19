@@ -23,8 +23,10 @@ public static class TestCases {
 			StartingPointCount = 10,
 
 			SearchRegion = new() { CornerA = new(-0.3, 0.75, 0), CornerB = new(0.3, 5, 90) },
-
-			StartingPointDistributor = (count, region) => StartingPointDistributors.DiscretePointDistributor(count, region, new Point3(-0.15, 2.87, 35)),
+			
+			//StartingPointDistributor = (count, region) => StartingPointDistributors.EvenCubicGridDistributor(150, new() { CornerA = new(-0.5, 0.5, 0), CornerB = new(0.5, 4, 90) }),
+			StartingPointDistributor = (count, region) => StartingPointDistributors.RectangularDistributor(0, new() { CornerA = new(-0.5, 0.5, 0), CornerB = new(0.5, 4, 90) }, 5, 10, 15),
+			//StartingPointDistributor = (count, region) => StartingPointDistributors.DiscretePointDistributor(count, region, new Point3(-0.5, 2, 20)),
 			//StartingPointDistributor = (count, region) => StartingPointDistributors.DiscretePointDistributor(count, region, new Point3(0.6, 4, 20)),
 			//StartingPointDistributor = (count, region) => StartingPointDistributors.DiscretePointDistributor(count, region, new Point3(0.05, 3.5, 70)),
 			//StartingPointDistributor = (count, region) => StartingPointDistributors.DiscretePointDistributor(count, region, new Point3(0, 2.92, 34-45)),
@@ -41,17 +43,17 @@ public static class TestCases {
 
 				//StepCalculator = (previousStep, previousGradient, gradient) => StepCalculators.ScaleGradientByPart(previousStep, previousGradient, gradient, new(0.000, 0.000, 3000)),
 				StepCalculator = (previousStep, previousGradient, gradient) => 
-					StepCalculators.LimitedScaleGradientByPart(previousStep, previousGradient, gradient, new(0.001, 0.001, 00), new(0.03, 0.03, 3.6)),
+					StepCalculators.LimitedScaleGradientByPart(previousStep, previousGradient, gradient, new(0.01, 0.01, 100), new(0.03, 0.03, 3.6)),
 					//StepCalculators.LimitedScaleGradientByPart(previousStep, previousGradient, gradient, new(0.001, 0.001, 100), new(0.01, 0.01, 3.6)),
 
 				ConvergenceDecider = new ConsecutiveSmallGradientAndPointChange {
-					MaxAllowedIterations = 5000,
+					MaxAllowedIterations = 1000,
 					ConsecutiveSmallIterationsRequired = 5,
 					GradientThreshold = 0.001,
 					PointChangeThreshold = new(0.001, 0.001, 0.01)
 				},
 
-				DivergenceDecider = new IterationDivergenceDecider { MaxAllowedIterations = 5000 }
+				DivergenceDecider = new IterationDivergenceDecider { MaxAllowedIterations = 1000 }
 			},
 
 			LeastDistanceCalculatorCreator = otherPoints => DumbLeastDistanceCalculator.Create(otherPoints),

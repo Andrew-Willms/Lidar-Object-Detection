@@ -1,4 +1,5 @@
-﻿using Microsoft.Maui.Controls;
+﻿using System.Collections.Immutable;
+using Microsoft.Maui.Controls;
 
 namespace Gui;
 
@@ -19,7 +20,7 @@ public partial class MainPage : ContentPage {
 		ShowStartingBoxBounds = true,
 		ShowFinalPosition = true,
 		ShowAllRoutes = true,
-		RoutesToShow = default,
+		RoutesToShow = ImmutableArray<int>.Empty,
 		ShowGuessPositions = true,
 		ShowGradient = true,
 		ShowStep = true
