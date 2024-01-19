@@ -180,9 +180,7 @@ public class GraphicsManager : IDrawable {
 			.Rotated(finalPosition.Z)
 			.Translated(new(finalPosition.X, finalPosition.Y));
 
-		if (TestCaseResults.position is not null) {
-			fieldCanvas.DrawPolygon(finalGuess, UiDetails.FinalPositionColor, UiDetails.FinalPositionLineThickness);
-		}
+		fieldCanvas.DrawPolygon(finalGuess, UiDetails.FinalPositionColor, UiDetails.FinalPositionLineThickness);
 	}
 
 }

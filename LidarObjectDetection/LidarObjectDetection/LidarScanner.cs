@@ -1,4 +1,5 @@
-﻿using System.Collections.Immutable;
+﻿using System;
+using System.Collections.Immutable;
 using System.Linq;
 using LinearAlgebra;
 
@@ -15,6 +16,8 @@ public readonly struct LidarScanner {
 	public required LineSegment[] Beams { get; init; }
 
 	public ImmutableArray<Point2> ScanInWorldCoord(World world, Vector2 lidarOffsetFromWorldCenter, double lidarRotation) {
+
+		throw new NotImplementedException(); // there is probably a bug in this, it should be more like ScanInLidarCoords
 
 		Point2 center = Center;
 

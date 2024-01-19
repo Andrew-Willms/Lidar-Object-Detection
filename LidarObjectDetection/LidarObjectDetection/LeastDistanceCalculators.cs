@@ -40,7 +40,15 @@ public readonly struct DumbLeastDistanceCalculator : ILeastDistanceCalculator {
 
 	public double DistanceTo(Point2 point) {
 
-		double test = OtherPoints.Select(point.DistanceFrom).Min();
+		Point2 closestPoint = Point2.Origin;
+
+		foreach (Point2 otherPoint in OtherPoints) {
+
+			if (point.DistanceFrom(otherPoint) < point.DistanceFrom(closestPoint)) {
+				closestPoint = otherPoint;
+			}
+
+		}
 
 		return OtherPoints.Select(point.DistanceFrom).Min();
 	}

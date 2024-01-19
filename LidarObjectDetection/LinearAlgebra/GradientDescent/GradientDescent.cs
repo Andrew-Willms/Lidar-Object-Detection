@@ -30,6 +30,10 @@ public static class GradientDescent {
 			data.Steps.Add(step);
 			data.Points.Add(point);
 			data.Errors.Add(function(point));
+
+			if (data.Errors.Count == 800) {
+				Console.WriteLine();
+			}
 #endif
 			previousPoint = point;
 			previousGradient = gradient;

@@ -39,6 +39,8 @@ public class ConsecutiveSmallGradientAndPointChange : IConvergenceDecider {
 			return true;
 		}
 
+		return false;
+
 		if (gradient.Magnitude < GradientThreshold
 		    && Math.Abs(point.X - PreviousPoint.X) > PointChangeThreshold.X
 		    && Math.Abs(point.Y - PreviousPoint.Y) > PointChangeThreshold.Y

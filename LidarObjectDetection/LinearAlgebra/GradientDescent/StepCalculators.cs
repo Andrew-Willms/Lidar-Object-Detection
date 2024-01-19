@@ -1,4 +1,6 @@
-﻿namespace LinearAlgebra.GradientDescent;
+﻿using System;
+
+namespace LinearAlgebra.GradientDescent;
 
 
 
@@ -45,6 +47,15 @@ public static class StepCalculators {
 	public static Vector3 ScaleGradientByPart(Vector3 previousStep, Vector3 previousGradient, Vector3 gradient, Vector3 scalingFactor) {
 
 		return new(gradient.X * scalingFactor.X, gradient.Y * scalingFactor.Y, gradient.Z * scalingFactor.Z);
+	}
+
+	public static Vector3 LimitedScaleGradientByPart(Vector3 previousStep, Vector3 previousGradient, Vector3 gradient, Vector3 scalingFactor, Vector3 limit) {
+
+		double x = Math.Clamp(gradient.X * scalingFactor.X, -limit.X, limit.X);
+		double y = Math.Clamp(gradient.Y * scalingFactor.Y, -limit.Y, limit.Y);
+		double z = Math.Clamp(gradient.Z * scalingFactor.Z, -limit.Z, limit.Z);
+
+		return new(x, y, z);
 	}
 
 }
