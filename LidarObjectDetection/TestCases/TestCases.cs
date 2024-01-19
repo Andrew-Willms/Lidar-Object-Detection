@@ -29,9 +29,9 @@ public static class TestCases {
 
 			GradientDescentParameters = new() {
 
-				InitialGradientApproximation = (function, point) => GradientApproximations.InitialConstantDifference(function, point, new(0.1, 0.1, 0.1)),
+				InitialNegativeGradientApproximation = (function, point) => NegativeGradientApproximations.InitialConstantDifference(function, point, new(0.1, 0.1, 0.1)),
 
-				GradientApproximation = (function, point, previousLocation) => GradientApproximations.ConstantDifference(function, point, previousLocation, new(0.1, 0.1, 0.1)),
+				NegativeGradientApproximation = (function, point, previousLocation) => NegativeGradientApproximations.ConstantDifference(function, point, previousLocation, new(0.1, 0.1, 0.1)),
 
 				InitialStepCalculator = gradient => InitialStepCalculators.ScaleGradient(gradient, 0.05),
 

@@ -11,7 +11,7 @@ public static class GradientDescent {
 #else
 	public static Point3? Descent(Func<Point3, double> function, Point3 startingPoint, GradientDescentParameters parameters) {
 #endif
-		Vector3 previousGradient = parameters.InitialGradientApproximation(function, startingPoint);
+		Vector3 previousGradient = parameters.InitialNegativeGradientApproximation(function, startingPoint);
 		Vector3 step = parameters.InitialStepCalculator(previousGradient);
 		Point3 previousPoint = startingPoint;
 #if DEBUG
@@ -22,7 +22,7 @@ public static class GradientDescent {
 #endif
 		while (true) {
 
-			Vector3 gradient = parameters.GradientApproximation(function, previousPoint, step);
+			Vector3 gradient = parameters.NegativeGradientApproximation(function, previousPoint, step);
 			step = parameters.StepCalculator(step, previousGradient, gradient);
 			Point3 point = previousPoint.Translated(step);
 #if DEBUG

@@ -4,9 +4,9 @@
 
 public class GradientDescentParameters {
 
-	public required InitialGradientApproximation InitialGradientApproximation { get; init; }
+	public required InitialNegativeGradientApproximation InitialNegativeGradientApproximation { get; init; }
 
-	public required GradientApproximation GradientApproximation { get; init; }
+	public required NegativeGradientApproximation NegativeGradientApproximation { get; init; }
 
 	public required InitialStepCalculator InitialStepCalculator { get; init; }
 

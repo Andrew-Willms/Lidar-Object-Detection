@@ -4,13 +4,13 @@ namespace LinearAlgebra.GradientDescent;
 
 
 
-public delegate Vector3 InitialGradientApproximation(Func<Point3, double> function, Point3 point);
+public delegate Vector3 InitialNegativeGradientApproximation(Func<Point3, double> function, Point3 point);
 
-public delegate Vector3 GradientApproximation(Func<Point3, double> function, Point3 point, Vector3 previousStep);
+public delegate Vector3 NegativeGradientApproximation(Func<Point3, double> function, Point3 point, Vector3 previousStep);
 
 
 
-public static class GradientApproximations {
+public static class NegativeGradientApproximations {
 
 	public static Vector3 InitialConstantDifference(Func<Point3, double> function, Point3 point, Vector3 approximationDeltaSize) {
 

@@ -8,8 +8,6 @@ public delegate Vector3 StepCalculator(Vector3 previousStep, Vector3 previousGra
 
 
 
-
-
 public static class InitialStepCalculators {
 
 	public static Vector3 ConstantStep(Vector3 gradient, double constantSize) {
