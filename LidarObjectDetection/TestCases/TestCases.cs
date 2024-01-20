@@ -25,8 +25,8 @@ public static class TestCases {
 			SearchRegion = new() { CornerA = new(-0.3, 0.75, 0), CornerB = new(0.3, 5, 90) },
 			
 			//StartingPointDistributor = (count, region) => StartingPointDistributors.EvenCubicGridDistributor(150, new() { CornerA = new(-0.5, 0.5, 0), CornerB = new(0.5, 4, 90) }),
-			StartingPointDistributor = (count, region) => StartingPointDistributors.RectangularDistributor(0, new() { CornerA = new(-0.25, 2.5, 0), CornerB = new(0.25, 3.5, 90) }, 15, 15, 45),
-			//StartingPointDistributor = (count, region) => StartingPointDistributors.DiscretePointDistributor(count, region, new Point3(-0.5, 2, 20)),
+			//StartingPointDistributor = (count, region) => StartingPointDistributors.RectangularDistributor(0, new() { CornerA = new(-0.25, 2.5, 0), CornerB = new(0.25, 3.5, 90) }, 2, 4, 30),
+			StartingPointDistributor = (count, region) => StartingPointDistributors.DiscretePointDistributor(count, region, new Point3(-0.5, 2, 20)),
 			//StartingPointDistributor = (count, region) => StartingPointDistributors.DiscretePointDistributor(count, region, new Point3(0.6, 4, 20)),
 			//StartingPointDistributor = (count, region) => StartingPointDistributors.DiscretePointDistributor(count, region, new Point3(0.05, 3.5, 70)),
 			//StartingPointDistributor = (count, region) => StartingPointDistributors.DiscretePointDistributor(count, region, new Point3(0, 2.92, 34-45)),
@@ -34,10 +34,10 @@ public static class TestCases {
 			GradientDescentParameters = new() {
 
 				InitialGradientApproximation = (function, point) => 
-					GradientApproximations.InitialConstantDifference(function, point, new(0.1, 0.1, 0.1)),
+					GradientApproximations.InitialConstantDifference(function, point, new(0.00000001, 0.00000001, 0.00000001)), // had 0.1
 
 				GradientApproximation = (function, point, previousLocation) => 
-					GradientApproximations.ConstantDifference(function, point, previousLocation, new(0.1, 0.1, 0.1)),
+					GradientApproximations.ConstantDifference(function, point, previousLocation, new(0.00000001, 0.00000001, 0.00000001)),
 
 				InitialStepCalculator = gradient => InitialStepCalculators.ScaleGradient(gradient, 0.05),
 
@@ -47,13 +47,13 @@ public static class TestCases {
 					//StepCalculators.LimitedScaleGradientByPart(previousStep, previousGradient, gradient, new(0.001, 0.001, 100), new(0.01, 0.01, 3.6)),
 
 				ConvergenceDeciderFactory = () => new ConsecutiveSmallGradientAndPointChange {
-					MaxAllowedIterations = 200,
+					MaxAllowedIterations = 1000,
 					ConsecutiveSmallIterationsRequired = 5,
 					GradientThreshold = 0.001,
 					PointChangeThreshold = new(0.001, 0.001, 0.01)
 				},
 
-				DivergenceDeciderFactory = () => new IterationDivergenceDecider { MaxAllowedIterations = 200 }
+				DivergenceDeciderFactory = () => new IterationDivergenceDecider { MaxAllowedIterations = 1000 }
 			},
 
 			LeastDistanceCalculatorCreator = otherPoints => DumbLeastDistanceCalculator.Create(otherPoints),

@@ -19,7 +19,7 @@ public partial class MainPage : ContentPage {
 		ShowStartingPoints = true,
 		ShowStartingBoxBounds = true,
 		ShowFinalPosition = true,
-		ShowAllRoutes = false,
+		ShowAllRoutes = true,
 		RoutesToShow = ImmutableArray<int>.Empty,
 		ShowGuessPositions = true,
 		ShowGradient = true,
