@@ -25,7 +25,7 @@ public static class TestCases {
 			SearchRegion = new() { CornerA = new(-0.3, 0.75, 0), CornerB = new(0.3, 5, 90) },
 			
 			//StartingPointDistributor = (count, region) => StartingPointDistributors.EvenCubicGridDistributor(150, new() { CornerA = new(-0.5, 0.5, 0), CornerB = new(0.5, 4, 90) }),
-			StartingPointDistributor = (count, region) => StartingPointDistributors.RectangularDistributor(0, new() { CornerA = new(-0.5, 0.5, 0), CornerB = new(0.5, 4, 90) }, 3, 5, 10),
+			StartingPointDistributor = (count, region) => StartingPointDistributors.RectangularDistributor(0, new() { CornerA = new(-0.25, 2.5, 0), CornerB = new(0.25, 3.5, 90) }, 15, 15, 45),
 			//StartingPointDistributor = (count, region) => StartingPointDistributors.DiscretePointDistributor(count, region, new Point3(-0.5, 2, 20)),
 			//StartingPointDistributor = (count, region) => StartingPointDistributors.DiscretePointDistributor(count, region, new Point3(0.6, 4, 20)),
 			//StartingPointDistributor = (count, region) => StartingPointDistributors.DiscretePointDistributor(count, region, new Point3(0.05, 3.5, 70)),
@@ -33,11 +33,11 @@ public static class TestCases {
 
 			GradientDescentParameters = new() {
 
-				InitialNegativeGradientApproximation = (function, point) => 
-					NegativeGradientApproximations.InitialConstantDifference(function, point, new(0.1, 0.1, 0.1)),
+				InitialGradientApproximation = (function, point) => 
+					GradientApproximations.InitialConstantDifference(function, point, new(0.1, 0.1, 0.1)),
 
-				NegativeGradientApproximation = (function, point, previousLocation) => 
-					NegativeGradientApproximations.ConstantDifference(function, point, previousLocation, new(0.1, 0.1, 0.1)),
+				GradientApproximation = (function, point, previousLocation) => 
+					GradientApproximations.ConstantDifference(function, point, previousLocation, new(0.1, 0.1, 0.1)),
 
 				InitialStepCalculator = gradient => InitialStepCalculators.ScaleGradient(gradient, 0.05),
 

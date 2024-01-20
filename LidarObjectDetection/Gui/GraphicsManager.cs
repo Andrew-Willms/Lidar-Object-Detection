@@ -80,10 +80,6 @@ public class GraphicsManager : IDrawable {
 			DrawLidarBeams(fieldCanvas);
 		}
 
-		if (ShowObjectsOnField) {
-			DrawObjectsOnField(fieldCanvas);
-		}
-
 		if (ShowRealLidarPoints) {
 
 		}
@@ -92,6 +88,10 @@ public class GraphicsManager : IDrawable {
 
 		if (ShowFinalPosition) {
 			DrawFinalPosition(fieldCanvas);
+		}
+
+		if (ShowObjectsOnField) {
+			DrawObjectsOnField(fieldCanvas);
 		}
 	}
 

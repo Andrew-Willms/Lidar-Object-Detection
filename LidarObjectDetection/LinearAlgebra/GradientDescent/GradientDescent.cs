@@ -11,22 +11,22 @@ public static class GradientDescent {
 		IConvergenceDecider convergenceDecider = parameters.ConvergenceDeciderFactory();
 		IDivergenceDecider divergenceDecider = parameters.DivergenceDeciderFactory();
 
-		Vector3 previousGradient = parameters.InitialNegativeGradientApproximation(function, startingPoint);
-		Vector3 step = parameters.InitialStepCalculator(previousGradient);
+		Vector3 previousNegativeGradient = -parameters.InitialGradientApproximation(function, startingPoint);
+		Vector3 step = parameters.InitialStepCalculator(previousNegativeGradient);
 		Point3 previousPoint = startingPoint;
 
 		data = new() { Parameters = parameters };
-		data.Gradients.Add(previousGradient);
+		data.Gradients.Add(previousNegativeGradient);
 		data.Steps.Add(step);
 		data.Points.Add(previousPoint);
 
 		while (true) {
 
-			Vector3 gradient = parameters.NegativeGradientApproximation(function, previousPoint, step);
-			step = parameters.StepCalculator(step, previousGradient, gradient);
+			Vector3 negativeGradient = -parameters.GradientApproximation(function, previousPoint, step);
+			step = parameters.StepCalculator(step, previousNegativeGradient, negativeGradient);
 			Point3 point = previousPoint.Translated(step);
 
-			data.Gradients.Add(gradient);
+			data.Gradients.Add(negativeGradient);
 			data.Steps.Add(step);
 			data.Points.Add(point);
 			data.Errors.Add(function(point));
@@ -36,13 +36,13 @@ public static class GradientDescent {
 			}
 
 			previousPoint = point;
-			previousGradient = gradient;
+			previousNegativeGradient = negativeGradient;
 
-			if (convergenceDecider.HasConverged(point, gradient, step)) {
+			if (convergenceDecider.HasConverged(point, negativeGradient, step)) {
 				return point;
 			}
 
-			if (divergenceDecider.HasDiverged(point, gradient, step)) {
+			if (divergenceDecider.HasDiverged(point, negativeGradient, step)) {
 				return null;
 			}
 		}

@@ -6,9 +6,9 @@ namespace LinearAlgebra.GradientDescent;
 
 public class GradientDescentParameters {
 
-	public required InitialNegativeGradientApproximation InitialNegativeGradientApproximation { get; init; }
+	public required InitialGradientApproximation InitialGradientApproximation { get; init; }
 
-	public required NegativeGradientApproximation NegativeGradientApproximation { get; init; }
+	public required GradientApproximation GradientApproximation { get; init; }
 
 	public required InitialStepCalculator InitialStepCalculator { get; init; }
 
