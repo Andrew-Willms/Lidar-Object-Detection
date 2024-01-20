@@ -147,6 +147,10 @@ public readonly struct Vector3 : IEquatable<Vector3> {
 		return left + -1 * right;
 	}
 
+	public static Vector3 operator -(Vector3 vector) {
+		return new(-vector.X, -vector.Y, -vector.Z);
+	}
+
 	public bool Equals(Vector3 other) {
 
 		return Math.Abs(X - other.X) < Constants.ComparisonTolerance &&
