@@ -12,7 +12,7 @@ public static class TestCases {
 
 		ShapeToFind = Shapes.SquareHalfMeter,
 
-		World = new(Shapes.SquareHalfMeter.Rotated(34).Translated(new(0, 3))),
+		World = new(Shapes.SquareHalfMeter.Rotated(-45).Translated(new(-0.3, 1.5))),
 
 		Lidar = LidarScanners.Lidar21Beams1mWide,
 		LidarOffset = new(0, 0),
@@ -26,7 +26,8 @@ public static class TestCases {
 			
 			//StartingPointDistributor = (count, region) => StartingPointDistributors.EvenCubicGridDistributor(150, new() { CornerA = new(-0.5, 0.5, 0), CornerB = new(0.5, 4, 90) }),
 			//StartingPointDistributor = (count, region) => StartingPointDistributors.RectangularDistributor(0, new() { CornerA = new(-0.25, 2.5, 0), CornerB = new(0.25, 3.5, 90) }, 2, 4, 30),
-			StartingPointDistributor = (count, region) => StartingPointDistributors.DiscretePointDistributor(count, region, new Point3(-0.5, 2, 20)),
+			//StartingPointDistributor = (count, region) => StartingPointDistributors.RectangularDistributor(0, new() { CornerA = new(-0.5, 2, 10), CornerB = new(-0.5, 2, 45) }, 1, 1, 20),
+			StartingPointDistributor = (count, region) => StartingPointDistributors.DiscretePointDistributor(count, region, new Point3(0.3, 3, 35)),
 			//StartingPointDistributor = (count, region) => StartingPointDistributors.DiscretePointDistributor(count, region, new Point3(0.6, 4, 20)),
 			//StartingPointDistributor = (count, region) => StartingPointDistributors.DiscretePointDistributor(count, region, new Point3(0.05, 3.5, 70)),
 			//StartingPointDistributor = (count, region) => StartingPointDistributors.DiscretePointDistributor(count, region, new Point3(0, 2.92, 34-45)),
@@ -43,14 +44,16 @@ public static class TestCases {
 
 				//StepCalculator = (previousStep, previousGradient, gradient) => StepCalculators.ScaleGradientByPart(previousStep, previousGradient, gradient, new(0.000, 0.000, 3000)),
 				StepCalculator = (previousStep, previousGradient, gradient) => 
-					StepCalculators.LimitedScaleGradientByPart(previousStep, previousGradient, gradient, new(0.01, 0.01, 100), new(0.03, 0.03, 3.6)),
+					StepCalculators.LimitedScaleGradientByPart(previousStep, previousGradient, gradient, new(0.5, 0.5, 1000), new(0.01, 0.01, 1.6)),
+					//StepCalculators.LimitedScaleGradientByPart(previousStep, previousGradient, gradient, new(0.5, 0.5, 0.5), new(0.01, 0.01, 1.6)),
 					//StepCalculators.LimitedScaleGradientByPart(previousStep, previousGradient, gradient, new(0.001, 0.001, 100), new(0.01, 0.01, 3.6)),
 
 				ConvergenceDeciderFactory = () => new ConsecutiveSmallGradientAndPointChange {
 					MaxAllowedIterations = 1000,
-					ConsecutiveSmallIterationsRequired = 5,
-					GradientThreshold = 0.001,
-					PointChangeThreshold = new(0.001, 0.001, 0.01)
+					ConsecutiveSmallIterationsRequired = 20,
+					//GradientThreshold = 0.001,
+					PointChangeThreshold = new(0.00001, 0.00001, 0.00036),
+					ErrorChangeThreshold = 0.00001
 				},
 
 				DivergenceDeciderFactory = () => new IterationDivergenceDecider { MaxAllowedIterations = 1000 }

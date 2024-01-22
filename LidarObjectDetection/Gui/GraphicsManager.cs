@@ -20,16 +20,16 @@ public static class UiDetails {
 	public const float LidarScannerLineThickness = 2;
 
 	public static readonly Color WorldObjectColor = Colors.Aqua;
-	public const float WorldObjectLineThickness = 2;
+	public const float WorldObjectLineThickness = 4;
 
-	public static readonly Color LidarDataColor = Colors.Green;
+	public static readonly Color LidarDataColor = Colors.Pink;
 	public const float LidarDataRadius = 3;
 
 	public static readonly Color GuessPositionColor = Colors.Blue;
 	public const float GuessPositionLineThickness = 1;
 
 	public static readonly Color FinalPositionColor = Colors.Magenta;
-	public const float FinalPositionLineThickness = 1;
+	public const float FinalPositionLineThickness = 2;
 
 }
 
@@ -54,13 +54,12 @@ public class GraphicsManager : IDrawable {
 	public required bool ShowLidarBeams { get; init; }
 	public required bool ShowObjectsOnField { get; init; }
 	public required bool ShowRealLidarPoints { get; init; }
-	public required bool ShowTheoreticalLidarPoints { get; init; }
+	//public required bool ShowTheoreticalLidarPoints { get; init; }
 
 	public required bool ShowShapeToFind { get; init; }
 	public required bool ShowStartingPoints { get; init; }
-	public required bool ShowStartingBoxBounds { get; init; }
+	//public required bool ShowStartingBoxBounds { get; init; }
 	//public required bool ShowSearchBounds { get; init; }
-
 	public required bool ShowFinalPosition { get; init; }
 
 	public required bool ShowAllRoutes { get; init; }
@@ -80,18 +79,18 @@ public class GraphicsManager : IDrawable {
 			DrawLidarBeams(fieldCanvas);
 		}
 
-		if (ShowRealLidarPoints) {
-
-		}
-
 		DrawRoutes(fieldCanvas);
-
-		if (ShowFinalPosition) {
-			DrawFinalPosition(fieldCanvas);
-		}
 
 		if (ShowObjectsOnField) {
 			DrawObjectsOnField(fieldCanvas);
+		}
+
+		if (ShowRealLidarPoints) {
+			DrawRealLidarPoints(fieldCanvas);
+		}
+
+		if (ShowFinalPosition) {
+			DrawFinalPosition(fieldCanvas);
 		}
 	}
 
